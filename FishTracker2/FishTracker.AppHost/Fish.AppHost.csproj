@@ -1,0 +1,16 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.1.1">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>4736a2bd-26c2-4d83-99a0-74ff0c6f88fb</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FishTracker.Api\Fish.Api.csproj" />
+    <ProjectReference Include="..\FishTracker.Web\Fish.Web.csproj" />
+  </ItemGroup>
+
+</Project>

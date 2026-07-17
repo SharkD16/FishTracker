@@ -1,0 +1,118 @@
+{
+  "version": 2,
+  "dgSpecHash": "LGCQL9S81Lg=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.1\\microsoft.aspnetcore.openapi.10.0.1.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.data.sqlite.core\\10.0.10\\microsoft.data.sqlite.core.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.10\\microsoft.entityframeworkcore.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.10\\microsoft.entityframeworkcore.abstractions.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\10.0.10\\microsoft.entityframeworkcore.analyzers.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\10.0.10\\microsoft.entityframeworkcore.relational.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\10.0.10\\microsoft.entityframeworkcore.sqlite.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\10.0.10\\microsoft.entityframeworkcore.sqlite.core.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.ambientmetadata.application\\10.1.0\\microsoft.extensions.ambientmetadata.application.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.compliance.abstractions\\10.1.0\\microsoft.extensions.compliance.abstractions.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.dependencyinjection.autoactivation\\10.1.0\\microsoft.extensions.dependencyinjection.autoactivation.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.10\\microsoft.extensions.dependencymodel.10.0.10.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.diagnostics.exceptionsummarization\\10.1.0\\microsoft.extensions.diagnostics.exceptionsummarization.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.http.diagnostics\\10.1.0\\microsoft.extensions.http.diagnostics.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.http.resilience\\10.1.0\\microsoft.extensions.http.resilience.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.resilience\\10.1.0\\microsoft.extensions.resilience.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.servicediscovery\\10.1.0\\microsoft.extensions.servicediscovery.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.servicediscovery.abstractions\\10.1.0\\microsoft.extensions.servicediscovery.abstractions.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.telemetry\\10.1.0\\microsoft.extensions.telemetry.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.telemetry.abstractions\\10.1.0\\microsoft.extensions.telemetry.abstractions.10.1.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry\\1.14.0\\opentelemetry.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry.api\\1.14.0\\opentelemetry.api.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry.api.providerbuilderextensions\\1.14.0\\opentelemetry.api.providerbuilderextensions.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry.exporter.opentelemetryprotocol\\1.14.0\\opentelemetry.exporter.opentelemetryprotocol.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry.extensions.hosting\\1.14.0\\opentelemetry.extensions.hosting.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry.instrumentation.aspnetcore\\1.14.0\\opentelemetry.instrumentation.aspnetcore.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry.instrumentation.http\\1.14.0\\opentelemetry.instrumentation.http.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\opentelemetry.instrumentation.runtime\\1.14.0\\opentelemetry.instrumentation.runtime.1.14.0.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\polly.core\\8.4.2\\polly.core.8.4.2.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\polly.extensions\\8.4.2\\polly.extensions.8.4.2.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\polly.ratelimiting\\8.4.2\\polly.ratelimiting.8.4.2.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.11\\sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\sqlitepclraw.core\\2.1.11\\sqlitepclraw.core.2.1.11.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.11\\sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
+    "C:\\Users\\dillm\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.11\\sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'OpenTelemetry.Api' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g94r-2vxg-569j",
+      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "libraryId": "OpenTelemetry.Api",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4625-4j76-fww9",
+      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-mr8r-92fq-pj8p",
+      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-q834-8qmm-v933",
+      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
+      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Api\\Fish.Api.csproj",
+      "libraryId": "SQLitePCLRaw.lib.e_sqlite3",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}

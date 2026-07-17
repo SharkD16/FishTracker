@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="FishTracker.Api/Fish.Api.csproj" />
+  <Project Path="FishTracker.AppHost/Fish.AppHost.csproj" />
+  <Project Path="FishTracker.Application/FishTracker.Application.csproj" />
+  <Project Path="FishTracker.Domain/FishTracker.Domain.csproj" />
+  <Project Path="FishTracker.Infrastructure/FishTracker.Infrastructure.csproj" />
+  <Project Path="FishTracker.ServiceDefaults/Fish.ServiceDefaults.csproj" />
+  <Project Path="FishTracker.Web/Fish.Web.csproj" />
+</Solution>
