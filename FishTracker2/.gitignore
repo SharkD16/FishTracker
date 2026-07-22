@@ -1,2 +1,14 @@
+# .NET build files
 **/bin/
 **/obj/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+
+# Node
+**/node_modules/
+**/dist/
+
+# Environment files
+.env
