@@ -38,9 +38,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+//defines the http response to a http request for the status of the database, meaning if the database is available and can be reached
 app.MapGet("/api/status", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
 {
-    var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken);
+    var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken); //await wont continue the code block until this line is complete
 
     return Results.Ok(new
     {
@@ -50,24 +51,26 @@ app.MapGet("/api/status", async (FishTrackerDbContext dbContext, CancellationTok
     });
 });
 
+//http response to http request of the list of users. returns the users sorted via username, 
 app.MapGet("/api/users", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
 {
     var users = await dbContext.Users
-        .AsNoTracking()
+        .AsNoTracking() //tells efcore that you are only reading the data
         .OrderBy(user => user.Username)
-        .Select(user => new UserResponse(user.UserId, user.Username, user.Email))
-        .ToListAsync(cancellationToken);
+        .Select(user => new UserResponse(user.UserId, user.Username, user.Email)) //turns each user into a UserResponse object that contains only userid, username, email
+        .ToListAsync(cancellationToken); //executes query asynchronously and returns as a list
 
     return Results.Ok(users);
 });
 
+//creates a new user in the database after checking for any username or email errors
 app.MapPost("/api/users", async (
-    CreateUserRequest request,
+    CreateUserRequest request, //contains data to make request to make a user entry
     FishTrackerDbContext dbContext,
     CancellationToken cancellationToken) =>
 {
-    var errors = new Dictionary<string, string[]>();
-    var username = request.Username?.Trim();
+    var errors = new Dictionary<string, string[]>(); //stores validation errors outlined below
+    var username = request.Username?.Trim(); // ?. means run trim if not null, else return null 
     var email = request.Email?.Trim().ToLowerInvariant();
 
     if (string.IsNullOrWhiteSpace(username))
@@ -105,6 +108,7 @@ app.MapPost("/api/users", async (
     return Results.Created($"/api/users/{user.UserId}", new UserResponse(user.UserId, user.Username, user.Email));
 });
 
+//returns list of caught fish from newest to oldest
 app.MapGet("/api/fish", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
 {
     var fish = await dbContext.Fish
@@ -122,8 +126,9 @@ app.MapGet("/api/fish", async (FishTrackerDbContext dbContext, CancellationToken
     return Results.Ok(fish);
 });
 
+//handles adding new fish to database
 app.MapPost("/api/fish", async (
-    CreateFishRequest request,
+    CreateFishRequest request, //contains data for the request to make a fish entry
     FishTrackerDbContext dbContext,
     CancellationToken cancellationToken) =>
 {
@@ -155,7 +160,7 @@ app.MapPost("/api/fish", async (
     }
 
     var user = await dbContext.Users
-        .SingleOrDefaultAsync(existingUser => existingUser.UserId == request.UserId, cancellationToken);
+        .SingleOrDefaultAsync(existingUser => existingUser.UserId == request.UserId, cancellationToken); //retrieves exactly one item from the database, but if there is no matching, returns the default value null
 
     if (user is null)
     {
@@ -182,7 +187,7 @@ app.MapPost("/api/fish", async (
         fish.Species));
 });
 
-app.MapDefaultEndpoints();
+app.MapDefaultEndpoints(); //makes default endpoints for aspire
 
 app.Run();
 
