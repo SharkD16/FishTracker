@@ -187,6 +187,25 @@ app.MapPost("/api/fish", async (
         fish.Species));
 });
 
+
+app.MapGet("/api/gear", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
+{
+    var gear = await dbContext.Gear
+    .AsNoTracking()
+    .OrderByDescending(gearRecord => gearRecord.GearId)
+    .Select(gearRecord => new GearResponse (
+        gearRecord.GearId,
+        gearRecord.UserId,
+        gearRecord.User.Username,
+        gearRecord.FishingRod,
+        gearRecord.Lure))
+    .ToListAsync(cancellationToken);
+    
+    return Results.Ok(gear);
+});
+
+
+
 app.MapDefaultEndpoints(); //makes default endpoints for aspire
 
 app.Run();
@@ -198,4 +217,8 @@ record FishResponse(int FishId, int UserId, string Username, decimal Weight, dec
 record CreateUserRequest(string? Username, string? Email);
 
 record UserResponse(int UserId, string Username, string Email);
+
+record CreateGearRequest(int UserId, string FishingRod, string Lure);
+
+record GearResponse(int GearId, int UserId, string Username, string FishingRod, string Lure);
 
