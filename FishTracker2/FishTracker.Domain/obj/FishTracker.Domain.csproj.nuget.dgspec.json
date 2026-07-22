@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dillm\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj": {}
+    "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dillm\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj": {
+    "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj",
         "projectName": "FishTracker.Domain",
-        "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj",
+        "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Domain\\FishTracker.Domain.csproj",
         "packagesPath": "C:\\Users\\dillm\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Domain\\obj\\",
+        "outputPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

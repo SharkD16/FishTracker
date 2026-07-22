@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "FishTracker.Application/1.0.0": {
+        "dependencies": {
+          "FishTracker.Domain": "1.0.0"
+        },
+        "runtime": {
+          "FishTracker.Application.dll": {}
+        }
+      },
+      "FishTracker.Domain/1.0.0": {
+        "runtime": {
+          "FishTracker.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "FishTracker.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FishTracker.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

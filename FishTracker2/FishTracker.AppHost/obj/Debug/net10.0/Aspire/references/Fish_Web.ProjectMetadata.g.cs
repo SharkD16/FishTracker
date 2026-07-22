@@ -15,7 +15,7 @@ public class Fish_Web : global::Aspire.Hosting.IProjectMetadata
     /// <summary>
     /// The path to the Fish_Web project.
     /// </summary>
-    public string ProjectPath => """C:\Users\dillm\FishTracker2\FishTracker.Web\Fish.Web.csproj""";
+    public string ProjectPath => """C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Web\Fish.Web.csproj""";
 
     /// <summary>
     /// Gets a value indicating whether building the project before running it should be suppressed.

@@ -1,0 +1,16 @@
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\bin\Debug\net10.0\FishTracker.Application.deps.json
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\bin\Debug\net10.0\FishTracker.Application.dll
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\bin\Debug\net10.0\FishTracker.Application.pdb
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\bin\Debug\net10.0\FishTracker.Domain.dll
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\bin\Debug\net10.0\FishTracker.Domain.pdb
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.csproj.AssemblyReference.cache
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.AssemblyInfoInputs.cache
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.AssemblyInfo.cs
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.csproj.CoreCompileInputs.cache
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.sourcelink.json
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTrac.11D977CA.Up2Date
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.dll
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\refint\FishTracker.Application.dll
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\FishTracker.Application.pdb
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.Application\obj\Debug\net10.0\ref\FishTracker.Application.dll

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gMbHHavJu20=",
+  "dgSpecHash": "fKQsia2GQdY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+  "projectFilePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dillm\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.2\\microsoft.aspnetcore.app.internal.assets.10.0.2.nupkg.sha512",
     "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.ambientmetadata.application\\10.1.0\\microsoft.extensions.ambientmetadata.application.10.1.0.nupkg.sha512",
@@ -33,9 +33,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Api' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g94r-2vxg-569j",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "libraryId": "OpenTelemetry.Api",
       "targetGraphs": [
         "net10.0"
@@ -45,9 +45,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4625-4j76-fww9",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"
@@ -57,9 +57,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-mr8r-92fq-pj8p",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"
@@ -69,9 +69,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-q834-8qmm-v933",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.Web\\Fish.Web.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"

@@ -1,0 +1,13 @@
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\bin\Debug\net10.0\Fish.ServiceDefaults.deps.json
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\bin\Debug\net10.0\Fish.ServiceDefaults.dll
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\bin\Debug\net10.0\Fish.ServiceDefaults.pdb
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.csproj.AssemblyReference.cache
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.AssemblyInfoInputs.cache
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.AssemblyInfo.cs
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.csproj.CoreCompileInputs.cache
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.sourcelink.json
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.dll
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\refint\Fish.ServiceDefaults.dll
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\Fish.ServiceDefaults.pdb
+C:\Users\dillm\FishTracker\FishTracker2\FishTracker.ServiceDefaults\obj\Debug\net10.0\ref\Fish.ServiceDefaults.dll

@@ -17,15 +17,15 @@ using System.Reflection;
     "ext\\"))]
 [assembly: System.Reflection.AssemblyMetadata("dcpbinpath", ("C:\\Users\\dillm\\.nuget\\packages\\aspire.hosting.orchestration.win-x64\\13.1.1\\tools\\" +
     "ext\\bin\\"))]
-[assembly: System.Reflection.AssemblyMetadata("apphostprojectpath", "C:\\Users\\dillm\\FishTracker2\\FishTracker.AppHost")]
+[assembly: System.Reflection.AssemblyMetadata("apphostprojectpath", "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.AppHost")]
 [assembly: System.Reflection.AssemblyMetadata("apphostprojectname", "Fish.AppHost.csproj")]
 [assembly: System.Reflection.AssemblyMetadata("aspiredashboardpath", ("C:\\Users\\dillm\\.nuget\\packages\\aspire.dashboard.sdk.win-x64\\13.1.1\\tools\\Aspire.D" +
     "ashboard.exe"))]
-[assembly: System.Reflection.AssemblyMetadataAttribute("apphostprojectbaseintermediateoutputpath", "C:\\Users\\dillm\\FishTracker2\\FishTracker.AppHost\\obj\\")]
+[assembly: System.Reflection.AssemblyMetadataAttribute("apphostprojectbaseintermediateoutputpath", "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.AppHost\\obj\\")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Fish.AppHost")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf336b46520e23b2c6b31cd535c75df72e2f43a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Fish.AppHost")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Fish.AppHost")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,3 +1,8 @@
+using FishTracker.Domain;
+using FishTracker.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire client integrations.
@@ -5,11 +10,25 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+var connectionString = builder.Configuration.GetConnectionString("FishTracker")
+    ?? throw new InvalidOperationException("Connection string 'FishTracker' was not found.");
+
+builder.Services.AddDbContext<FishTrackerDbContext>(options =>
+    options.UseSqlite(connectionString));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<FishTrackerDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
@@ -19,29 +38,159 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
-
-app.MapGet("/", () => "API service is running. Navigate to /weatherforecast to see sample data.");
-
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/api/status", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken);
+
+    return Results.Ok(new
+    {
+        status = "ok",
+        database = "SQLite",
+        canConnect
+    });
+});
+
+app.MapGet("/api/users", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
+{
+    var users = await dbContext.Users
+        .AsNoTracking()
+        .OrderBy(user => user.Username)
+        .Select(user => new UserResponse(user.UserId, user.Username, user.Email))
+        .ToListAsync(cancellationToken);
+
+    return Results.Ok(users);
+});
+
+app.MapPost("/api/users", async (
+    CreateUserRequest request,
+    FishTrackerDbContext dbContext,
+    CancellationToken cancellationToken) =>
+{
+    var errors = new Dictionary<string, string[]>();
+    var username = request.Username?.Trim();
+    var email = request.Email?.Trim().ToLowerInvariant();
+
+    if (string.IsNullOrWhiteSpace(username))
+    {
+        errors[nameof(request.Username)] = ["Username is required."];
+    }
+
+    if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+    {
+        errors[nameof(request.Email)] = ["A valid email address is required."];
+    }
+
+    if (errors.Count > 0)
+    {
+        return Results.ValidationProblem(errors);
+    }
+
+    var emailInUse = await dbContext.Users
+        .AnyAsync(user => user.Email == email, cancellationToken);
+
+    if (emailInUse)
+    {
+        return Results.Conflict(new { message = "That email address is already in use." });
+    }
+
+    var user = new User
+    {
+        Username = username!,
+        Email = email!
+    };
+
+    dbContext.Users.Add(user);
+    await dbContext.SaveChangesAsync(cancellationToken);
+
+    return Results.Created($"/api/users/{user.UserId}", new UserResponse(user.UserId, user.Username, user.Email));
+});
+
+app.MapGet("/api/fish", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
+{
+    var fish = await dbContext.Fish
+        .AsNoTracking()
+        .OrderByDescending(catchRecord => catchRecord.FishId)
+        .Select(catchRecord => new FishResponse(
+            catchRecord.FishId,
+            catchRecord.UserId,
+            catchRecord.User.Username,
+            catchRecord.Weight,
+            catchRecord.Length,
+            catchRecord.Species))
+        .ToListAsync(cancellationToken);
+
+    return Results.Ok(fish);
+});
+
+app.MapPost("/api/fish", async (
+    CreateFishRequest request,
+    FishTrackerDbContext dbContext,
+    CancellationToken cancellationToken) =>
+{
+    var errors = new Dictionary<string, string[]>();
+
+    if (request.UserId <= 0)
+    {
+        errors[nameof(request.UserId)] = ["A valid user ID is required."];
+    }
+
+    if (request.Weight <= 0)
+    {
+        errors[nameof(request.Weight)] = ["Weight must be greater than zero."];
+    }
+
+    if (request.Length <= 0)
+    {
+        errors[nameof(request.Length)] = ["Length must be greater than zero."];
+    }
+
+    if (!Enum.IsDefined(request.Species))
+    {
+        errors[nameof(request.Species)] = ["A valid fish species is required."];
+    }
+
+    if (errors.Count > 0)
+    {
+        return Results.ValidationProblem(errors);
+    }
+
+    var user = await dbContext.Users
+        .SingleOrDefaultAsync(existingUser => existingUser.UserId == request.UserId, cancellationToken);
+
+    if (user is null)
+    {
+        return Results.NotFound(new { message = $"User {request.UserId} was not found." });
+    }
+
+    var fish = new Fish
+    {
+        UserId = user.UserId,
+        Weight = request.Weight,
+        Length = request.Length,
+        Species = request.Species
+    };
+
+    dbContext.Fish.Add(fish);
+    await dbContext.SaveChangesAsync(cancellationToken);
+
+    return Results.Created($"/api/fish/{fish.FishId}", new FishResponse(
+        fish.FishId,
+        user.UserId,
+        user.Username,
+        fish.Weight,
+        fish.Length,
+        fish.Species));
+});
 
 app.MapDefaultEndpoints();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record CreateFishRequest(int UserId, decimal Weight, decimal Length, Species Species);
+
+record FishResponse(int FishId, int UserId, string Username, decimal Weight, decimal Length, Species Species);
+
+record CreateUserRequest(string? Username, string? Email);
+
+record UserResponse(int UserId, string Username, string Email);
+

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PMcLeOCy/jU=",
+  "dgSpecHash": "EFYU3DyRmGw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+  "projectFilePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.ambientmetadata.application\\10.1.0\\microsoft.extensions.ambientmetadata.application.10.1.0.nupkg.sha512",
     "C:\\Users\\dillm\\.nuget\\packages\\microsoft.extensions.compliance.abstractions\\10.1.0\\microsoft.extensions.compliance.abstractions.10.1.0.nupkg.sha512",
@@ -32,9 +32,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Api' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g94r-2vxg-569j",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "libraryId": "OpenTelemetry.Api",
       "targetGraphs": [
         "net10.0"
@@ -44,9 +44,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4625-4j76-fww9",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"
@@ -56,9 +56,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-mr8r-92fq-pj8p",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"
@@ -68,9 +68,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.14.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-q834-8qmm-v933",
-      "projectPath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "projectPath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\dillm\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
+      "filePath": "C:\\Users\\dillm\\FishTracker\\FishTracker2\\FishTracker.ServiceDefaults\\Fish.ServiceDefaults.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"
