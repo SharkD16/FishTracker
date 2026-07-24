@@ -210,10 +210,25 @@ app.MapPost("/api/gear", async (
     CancellationToken cancellationToken) =>
 {
     var errors = new Dictionary<string, string[]>();
+
+    var fishingRod = request.FishingRod?.Trim();
+    var lure = request.Lure?.Trim();
+
     if (request.UserId <= 0)
     {
         errors[nameof(request.UserId)] = ["A valid user ID is required."];
     }
+
+    if (string.IsNullOrWhiteSpace(fishingRod))
+    {
+        errors[nameof(request.FishingRod)] = ["Fishing Rod is required"];
+    }
+
+    if (string.IsNullOrWhiteSpace(lure))
+    {
+        errors[nameof(request.Lure)] = ["Lure is required"];
+    }
+
     if (errors.Count > 0)
     {
         return Results.ValidationProblem(errors);
@@ -229,8 +244,8 @@ app.MapPost("/api/gear", async (
     var gear = new Gear
     {
         UserId = user.UserId,
-        FishingRod = request.FishingRod,
-        Lure = request.Lure,
+        FishingRod = fishingRod!,
+        Lure = lure!,
     };
 
     dbContext.Gear.Add(gear);
