@@ -204,6 +204,48 @@ app.MapGet("/api/gear", async (FishTrackerDbContext dbContext, CancellationToken
     return Results.Ok(gear);
 });
 
+app.MapPost("/api/gear", async (
+    CreateGearRequest request,
+    FishTrackerDbContext dbContext,
+    CancellationToken cancellationToken) =>
+{
+    var errors = new Dictionary<string, string[]>();
+    if (request.UserId <= 0)
+    {
+        errors[nameof(request.UserId)] = ["A valid user ID is required."];
+    }
+    if (errors.Count > 0)
+    {
+        return Results.ValidationProblem(errors);
+    }
+    var user = await dbContext.Users
+        .SingleOrDefaultAsync(existingUser => existingUser.UserId == request.UserId, cancellationToken);
+
+    if (user is null)
+    {
+        return Results.NotFound(new { message = $"User {request.UserId} was not found." });
+    }
+
+    var gear = new Gear
+    {
+        UserId = user.UserId,
+        FishingRod = request.FishingRod,
+        Lure = request.Lure,
+    };
+
+    dbContext.Gear.Add(gear);
+    await dbContext.SaveChangesAsync(cancellationToken);
+
+    return Results.Created($"/api/gear/{gear.GearId}", new GearResponse(
+        gear.GearId,
+        user.UserId,
+        user.Username,
+        gear.FishingRod,
+        gear.Lure));
+
+
+});
+
 
 
 app.MapDefaultEndpoints(); //makes default endpoints for aspire
