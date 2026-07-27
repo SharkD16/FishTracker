@@ -8,4 +8,5 @@ public class Gear
     public required string FishingRod{ get; set; }
 
     public required string Lure{ get; set; }
+    public User User { get; set; } = null!;
 }

@@ -3,11 +3,9 @@ public class Fish
 {
     public int FishId{ get; set; }
 
-    public double Weight{ get; set; }
+    public decimal Weight{ get; set; }
     
-    public double Length{ get; set; }
-
-    public int SpeciesId{ get; set; }
+    public decimal Length{ get; set; }
     
     public Species Species{ get; set; }
 
