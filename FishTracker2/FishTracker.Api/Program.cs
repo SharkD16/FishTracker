@@ -1,6 +1,7 @@
 using FishTracker.Domain;
 using FishTracker.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,21 @@ builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+var allowedClientOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
+
+builder.Services.AddCors(options =>
+    options.AddPolicy("react-client", policy =>
+    {
+        if (allowedClientOrigins.Length > 0)
+        {
+            policy.WithOrigins(allowedClientOrigins)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+    }));
 
 var connectionString = builder.Configuration.GetConnectionString("FishTracker")
     ?? throw new InvalidOperationException("Connection string 'FishTracker' was not found.");
@@ -32,10 +48,12 @@ using (var scope = app.Services.CreateScope())
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
+app.UseCors("react-client");
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 //defines the http response to a http request for the status of the database, meaning if the database is available and can be reached
@@ -43,12 +61,16 @@ app.MapGet("/api/status", async (FishTrackerDbContext dbContext, CancellationTok
 {
     var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken); //await wont continue the code block until this line is complete
 
-    return Results.Ok(new
-    {
-        status = "ok",
-        database = "SQLite",
-        canConnect
-    });
+    return canConnect
+        ? Results.Ok(new
+        {
+            status = "ok",
+            database = "SQLite",
+            canConnect = true
+        })
+        : Results.Problem(
+            title: "Database unavailable",
+            statusCode: StatusCodes.Status503ServiceUnavailable);
 });
 
 //http response to http request of the list of users. returns the users sorted via username, 

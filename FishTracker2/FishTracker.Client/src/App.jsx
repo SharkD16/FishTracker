@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
   const [apiStatus, setApiStatus] = useState({ state: 'loading' })
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
 
-  async function checkApi() {
+  const checkApi = useCallback(async () => {
     setApiStatus({ state: 'loading' })
 
     try {
-      const response = await fetch('/api/status')
+      const response = await fetch(`${apiBaseUrl}/api/status`)
 
       if (!response.ok) {
         throw new Error(`The API returned ${response.status}.`)
@@ -18,11 +19,11 @@ function App() {
     } catch (error) {
       setApiStatus({ state: 'error', message: error.message })
     }
-  }
+  }, [apiBaseUrl])
 
   useEffect(() => {
-    checkApi()
-  }, [])
+    void checkApi()
+  }, [checkApi])
 
   return (
     <main className="app">
@@ -33,7 +34,7 @@ function App() {
       </p>
 
       <section className="status-card" aria-live="polite">
-        {apiStatus.state === 'loading' && <p>Checking the API…</p>}
+        {apiStatus.state === 'loading' && <p>Checking the API...</p>}
 
         {apiStatus.state === 'success' && (
           <>

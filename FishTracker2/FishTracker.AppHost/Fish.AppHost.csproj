@@ -10,7 +10,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FishTracker.Api\Fish.Api.csproj" />
-    <ProjectReference Include="..\FishTracker.Web\Fish.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.1.1" />
   </ItemGroup>
 
 </Project>
