@@ -283,6 +283,27 @@ app.MapPost("/api/gear", async (
 
 });
 
+app.MapGet("/api/users/{userID}/stats", async (
+    int userID, 
+    FishTrackerDbContext dbContext, 
+    CancellationToken cancellationToken) =>
+{
+    var userFish = dbContext.Fish.Where(fish => fish.UserId == userID);
+    var fishCaught = await userFish.CountAsync(cancellationToken);
+    var heaviestFish = await userFish.MaxAsync(fish => fish.Weight, cancellationToken);
+    var longestFish = await userFish.MaxAsync(fish => fish.Length, cancellationToken);
+
+    return Results.Ok(new
+    {
+        userFish,
+        fishCaught,
+        heaviestFish,
+        longestFish
+
+    });
+}
+);
+
 
 
 app.MapDefaultEndpoints(); //makes default endpoints for aspire
