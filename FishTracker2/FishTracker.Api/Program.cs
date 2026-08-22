@@ -1,8 +1,10 @@
 using FishTracker.Domain;
 using FishTracker.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,8 @@ var connectionString = builder.Configuration.GetConnectionString("FishTracker")
 
 builder.Services.AddDbContext<FishTrackerDbContext>(options =>
     options.UseSqlite(connectionString));
+
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -89,6 +93,7 @@ app.MapGet("/api/users", async (FishTrackerDbContext dbContext, CancellationToke
 app.MapPost("/api/users", async (
     CreateUserRequest request, //contains data to make request to make a user entry
     FishTrackerDbContext dbContext,
+    IPasswordHasher<User> passwordHasher,
     CancellationToken cancellationToken) =>
 {
     var errors = new Dictionary<string, string[]>(); //stores validation errors outlined below
@@ -103,6 +108,11 @@ app.MapPost("/api/users", async (
     if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
     {
         errors[nameof(request.Email)] = ["A valid email address is required."];
+    }
+
+    if (string.IsNullOrWhiteSpace(request.Password))
+    {
+        errors[nameof(request.Password)] = ["Password is required."];
     }
 
     if (errors.Count > 0)
@@ -123,6 +133,8 @@ app.MapPost("/api/users", async (
         Username = username!,
         Email = email!
     };
+
+    user.PasswordHash = passwordHasher.HashPassword(user, request.Password!);
 
     dbContext.Users.Add(user);
     await dbContext.SaveChangesAsync(cancellationToken);
@@ -314,7 +326,7 @@ record CreateFishRequest(int UserId, decimal Weight, decimal Length, Species Spe
 
 record FishResponse(int FishId, int UserId, string Username, decimal Weight, decimal Length, Species Species);
 
-record CreateUserRequest(string? Username, string? Email);
+record CreateUserRequest(string? Username, string? Email, string? Password);
 
 record UserResponse(int UserId, string Username, string Email);
 
