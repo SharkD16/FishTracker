@@ -142,6 +142,50 @@ app.MapPost("/api/users", async (
     return Results.Created($"/api/users/{user.UserId}", new UserResponse(user.UserId, user.Username, user.Email));
 });
 
+app.MapPost("/api/login", async (
+    LoginRequest request,
+    FishTrackerDbContext dbContext,
+    IPasswordHasher<User> passwordHasher,
+    CancellationToken cancellationToken) =>
+{
+    var username = request.Username?.Trim();
+
+    if (string.IsNullOrWhiteSpace(username) ||
+        string.IsNullOrWhiteSpace(request.Password))
+    {
+        return Results.BadRequest(new
+        {
+            message = "Username and password are required."
+        });
+    }
+
+    var user = await dbContext.Users
+        .SingleOrDefaultAsync(
+            existingUser => existingUser.Username == username,
+            cancellationToken);
+
+    if (user is null)
+    {
+        return Results.Unauthorized();
+    }
+
+    var passwordResult = passwordHasher.VerifyHashedPassword(
+        user,
+        user.PasswordHash,
+        request.Password);
+
+    if (passwordResult == PasswordVerificationResult.Failed)
+    {
+        return Results.Unauthorized();
+    }
+
+    return Results.Ok(new
+    {
+        userId = user.UserId,
+        username = user.Username
+    });
+});
+
 //returns list of caught fish from newest to oldest
 app.MapGet("/api/fish", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
 {
@@ -334,3 +378,4 @@ record CreateGearRequest(int UserId, string FishingRod, string Lure);
 
 record GearResponse(int GearId, int UserId, string Username, string FishingRod, string Lure);
 
+record LoginRequest(string? Username, string? Password);
