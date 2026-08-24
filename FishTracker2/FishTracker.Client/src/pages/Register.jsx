@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './Register.css';
 
-function Register({ navigation }) {
+function Register({ onBackToLogin }) {
   // State to hold user input data
   const [formData, setFormData] = useState({
-    fullName: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -20,30 +20,58 @@ function Register({ navigation }) {
   };
 
   // Form submission handler
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Basic verification checks
+ const handleSubmit = async (e) => {
+    e.preventDefault()
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+        alert('Passwords do not match!')
+        return
     }
-    
-    console.log('Registration Submitted:', formData);
-    // Add your signup logic or backend API calls here
-  };
+
+    try {
+        const response = await fetch('http://localhost:5554/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: formData.username,
+                email: formData.email,
+                password: formData.password
+            })
+        })
+
+        if (!response.ok) {
+            const error = await response.json()
+            console.log('Registration error:', error)
+            alert(JSON.stringify(error))
+            return
+        }
+
+        const user = await response.json()
+
+        console.log('Registered user:', user)
+
+        // Go back to Login
+        onBackToLogin()
+
+    } catch (error) {
+        console.error(error)
+        alert('Could not connect to the server.')
+    }
+}
 
   return (
     <main className="register-container">
       <h1>Create Account</h1>
       
       <form onSubmit={handleSubmit} className="register-form">
-        <label className="title">Full Name</label>
+        <label className="title">Username</label>
         <input 
           type="text" 
-          name="fullName"
-          placeholder="John Doe" 
-          value={formData.fullName}
+          name="username"
+          placeholder="Username" 
+          value={formData.username}
           onChange={handleChange}
           required
         />
@@ -81,16 +109,16 @@ function Register({ navigation }) {
         <button type="submit">Sign Up</button>
       </form>
       
-      <p className="footer-text">
-        Already have an account? 
-        {/* Toggle between React Router or React Navigation depending on your framework */}
-        <button 
-          className="link-btn" 
-          onClick={() => navigation ? navigation.navigate('Login') : console.log('Link clicked')}
-        >
-          Log in
-        </button>
-      </p>
+        <p className="footer-text">
+            Already have an account?
+            <button
+                className="link-btn"
+                type="button"
+                onClick={onBackToLogin}
+            >
+                Log in
+            </button>
+        </p>
     </main>
   );
 }
