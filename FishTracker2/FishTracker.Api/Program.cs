@@ -345,17 +345,33 @@ app.MapGet("/api/users/{userID}/stats", async (
     CancellationToken cancellationToken) =>
 {
     var userFish = dbContext.Fish.Where(fish => fish.UserId == userID);
+
     var fishCaught = await userFish.CountAsync(cancellationToken);
+
+    if (fishCaught == 0)
+    {
+        return Results.Ok(new
+        {
+            fishCaught = 0,
+            heaviestFish = 0,
+            longestFish = 0,
+            avgWeight = 0,
+            avgLength = 0
+        });
+    }
+
     var heaviestFish = await userFish.MaxAsync(fish => fish.Weight, cancellationToken);
     var longestFish = await userFish.MaxAsync(fish => fish.Length, cancellationToken);
+    var avgLength = await userFish.AverageAsync(fish => fish.Length, cancellationToken);
+    var avgWeight = await userFish.AverageAsync(Fish => Fish.Weight, cancellationToken);
 
     return Results.Ok(new
     {
-        userFish,
         fishCaught,
         heaviestFish,
-        longestFish
-
+        longestFish,
+        avgLength,
+        avgWeight
     });
 }
 );
