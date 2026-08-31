@@ -1,7 +1,9 @@
 import './Login.css'
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 function Login({ onLogin, onRegister }) {
+    const { setUser } = useAuth();
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -28,11 +30,13 @@ function Login({ onLogin, onRegister }) {
                 return
             }
 
+
             const user = await response.json()
 
             console.log('Logged in user:', user)
 
-            onLogin(user)
+            setUser(user);
+            onLogin(user);
 
         } catch (error) {
             console.error(error)
