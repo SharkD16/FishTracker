@@ -236,3 +236,41 @@
 .record-line {
     background-color: var(--accent-gold);
 }
+
+.debug-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    width: 2px;
+
+    transform: translateX(-50%);
+
+    z-index: 10;
+    pointer-events: none;
+}
+
+.start-debug {
+    background: lime;
+}
+
+.end-debug {
+    background: red;
+}
+
+.debug-marker span {
+    position: absolute;
+    top: -18px;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-size: 10px;
+    font-weight: bold;
+
+    background: black;
+    color: white;
+
+    padding: 2px 4px;
+    border-radius: 3px;
+}

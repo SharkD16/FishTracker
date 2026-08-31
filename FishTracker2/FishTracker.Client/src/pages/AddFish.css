@@ -1,0 +1,215 @@
+.add-fish {
+    width: 100%;
+    max-width: 400px;
+    min-height: 350px;
+
+    margin: 0 auto;
+    padding: 24px;
+
+    box-sizing: border-box;
+
+    border-radius: 24px;
+
+    background: linear-gradient(
+        180deg,
+        #e2f1f8 0%,
+        #bce0ee 35%,
+        #1b4965 100%
+    );
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Header */
+
+.add-fish-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-fish-header h1 {
+    margin: 0 0 5px 0;
+
+    font-size: 30px;
+    color: #0b2545;
+}
+
+.add-fish-header p {
+    margin: 0;
+
+    color: #31566b;
+    font-size: 14px;
+}
+
+
+/* Form */
+
+.fish-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+
+/* Individual fields */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0b2545;
+}
+
+.required {
+    color: #e63946;
+}
+
+
+/* Inputs */
+
+.form-group input,
+.form-group select {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    box-sizing: border-box;
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.75);
+
+    font-size: 15px;
+    color: #0b2545;
+
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border: 2px solid #64dfdf;
+}
+
+
+/* Units */
+
+.input-with-unit {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.input-with-unit input {
+    flex: 1;
+}
+
+.input-with-unit span {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+
+/* Button */
+
+.add-fish-button {
+    margin-top: 5px;
+
+    padding: 12px;
+
+    border: none;
+    border-radius: 12px;
+
+    background-color: #64dfdf;
+    color: #0b2545;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.add-fish-button:hover {
+    background-color: #4fc4c4;
+}
+
+.fish {
+    position: absolute;
+    font-size: 35px;
+
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+.fish1 {
+    top: 30%;
+    animation: swim1 8s infinite linear;
+}
+
+.fish2 {
+    top: 55%;
+    animation: swim2 11s infinite linear;
+}
+
+.fish3 {
+    top: 70%;
+    animation: swim3 9s infinite linear;
+}
+
+@keyframes swim1 {
+    0% {
+        left: -50px;
+    }
+
+    50% {
+        left: 80%;
+    }
+
+    100% {
+        left: -50px;
+    }
+}
+
+@keyframes swim2 {
+    0% {
+        left: 90%;
+    }
+
+    50% {
+        left: 10%;
+    }
+
+    100% {
+        left: 90%;
+    }
+}
+
+@keyframes swim3 {
+    0% {
+        left: -50px;
+    }
+
+    30% {
+        left: 40%;
+    }
+
+    70% {
+        left: 80%;
+    }
+
+    100% {
+        left: -50px;
+    }
+}
