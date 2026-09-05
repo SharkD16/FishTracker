@@ -7,6 +7,8 @@ public class User
 
     public required string Email{ get; set;}
 
+    public required string PasswordHash { get; set; }
+
     public List<Fish> Fish { get; set; } = new();
 
     public List<Gear> Gear { get; set; } = new();

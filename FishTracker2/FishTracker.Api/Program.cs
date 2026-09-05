@@ -1,303 +1,210 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using FishTracker.Domain;
 using FishTracker.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
-
-// Add services to the container.
 builder.Services.AddProblemDetails();
-builder.Services.ConfigureHttpJsonOptions(options =>
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-var allowedClientOrigins = builder.Configuration
-    .GetSection("Cors:AllowedOrigins")
-    .Get<string[]>() ?? [];
-
-builder.Services.AddCors(options =>
-    options.AddPolicy("react-client", policy =>
+var jwt = builder.Configuration.GetSection("Jwt").Get<JwtOptions>()
+    ?? throw new InvalidOperationException("JWT configuration is required.");
+if (string.IsNullOrWhiteSpace(jwt.SigningKey) || jwt.SigningKey.Length < 32 || string.IsNullOrWhiteSpace(jwt.Issuer) || string.IsNullOrWhiteSpace(jwt.Audience))
+    throw new InvalidOperationException("Jwt:SigningKey (at least 32 characters), Jwt:Issuer, and Jwt:Audience must be configured.");
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+{
+    o.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+    o.TokenValidationParameters = new()
     {
-        if (allowedClientOrigins.Length > 0)
-        {
-            policy.WithOrigins(allowedClientOrigins)
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        }
-    }));
+        ValidateIssuerSigningKey = true, IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey)),
+        ValidateIssuer = true, ValidIssuer = jwt.Issuer, ValidateAudience = true, ValidAudience = jwt.Audience,
+        ValidateLifetime = true, ClockSkew = TimeSpan.FromSeconds(30), NameClaimType = ClaimTypes.Name
+    };
+});
+builder.Services.AddAuthorization();
 
-var connectionString = builder.Configuration.GetConnectionString("FishTracker")
-    ?? throw new InvalidOperationException("Connection string 'FishTracker' was not found.");
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+builder.Services.AddCors(o => o.AddPolicy("react-client", p =>
+{
+    if (allowedOrigins.Length > 0) p.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
+    else p.SetIsOriginAllowed(_ => false);
+}));
+builder.Services.AddRateLimiter(o =>
+{
+    o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    var authLimit = builder.Configuration.GetValue("RateLimiting:AuthPermitLimit", 5);
+    var apiLimit = builder.Configuration.GetValue("RateLimiting:ApiPermitLimit", 120);
+    o.AddPolicy("auth", c => RateLimitPartition.GetFixedWindowLimiter(c.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ => new() { PermitLimit = authLimit, Window = TimeSpan.FromMinutes(15), QueueLimit = 0 }));
+    o.AddPolicy("api", c => RateLimitPartition.GetFixedWindowLimiter(c.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? c.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ => new() { PermitLimit = apiLimit, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+});
 
-builder.Services.AddDbContext<FishTrackerDbContext>(options =>
-    options.UseSqlite(connectionString));
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+var connectionString = builder.Configuration.GetConnectionString("FishTracker") ?? throw new InvalidOperationException("Connection string 'FishTracker' was not found.");
+builder.Services.AddDbContext<FishTrackerDbContext>(o => o.UseSqlite(connectionString));
+builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("database");
 builder.Services.AddOpenApi();
-
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
+if (app.Configuration.GetValue("Database:ApplyMigrationsOnStartup", false))
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<FishTrackerDbContext>();
-    dbContext.Database.Migrate();
+    using var scope = app.Services.CreateScope();
+    await scope.ServiceProvider.GetRequiredService<FishTrackerDbContext>().Database.MigrateAsync();
 }
-
-// Configure the HTTP request pipeline.
 app.UseExceptionHandler();
+if (!app.Environment.IsDevelopment()) app.UseHsts();
+app.UseHttpsRedirection();
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+    context.Response.Headers.Append("Referrer-Policy", "no-referrer");
+    context.Response.Headers.Append("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+    await next();
+});
 app.UseCors("react-client");
+app.UseAuthentication();
+app.UseRateLimiter();
+app.UseAuthorization();
+if (app.Environment.IsDevelopment()) { app.MapOpenApi(); app.MapScalarApiReference(); }
+app.MapHealthChecks("/health/live", new() { Predicate = c => c.Tags.Contains("live") });
+app.MapHealthChecks("/health/ready");
+app.MapGet("/api/status", async (FishTrackerDbContext db, CancellationToken ct) => await db.Database.CanConnectAsync(ct) ? Results.Ok(new { status = "ok" }) : Results.Problem(statusCode: 503)).RequireRateLimiting("api");
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
-
-//defines the http response to a http request for the status of the database, meaning if the database is available and can be reached
-app.MapGet("/api/status", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
-{
-    var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken); //await wont continue the code block until this line is complete
-
-    return canConnect
-        ? Results.Ok(new
-        {
-            status = "ok",
-            database = "SQLite",
-            canConnect = true
-        })
-        : Results.Problem(
-            title: "Database unavailable",
-            statusCode: StatusCodes.Status503ServiceUnavailable);
-});
-
-//http response to http request of the list of users. returns the users sorted via username, 
-app.MapGet("/api/users", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
-{
-    var users = await dbContext.Users
-        .AsNoTracking() //tells efcore that you are only reading the data
-        .OrderBy(user => user.Username)
-        .Select(user => new UserResponse(user.UserId, user.Username, user.Email)) //turns each user into a UserResponse object that contains only userid, username, email
-        .ToListAsync(cancellationToken); //executes query asynchronously and returns as a list
-
-    return Results.Ok(users);
-});
-
-//creates a new user in the database after checking for any username or email errors
-app.MapPost("/api/users", async (
-    CreateUserRequest request, //contains data to make request to make a user entry
-    FishTrackerDbContext dbContext,
-    CancellationToken cancellationToken) =>
-{
-    var errors = new Dictionary<string, string[]>(); //stores validation errors outlined below
-    var username = request.Username?.Trim(); // ?. means run trim if not null, else return null 
-    var email = request.Email?.Trim().ToLowerInvariant();
-
-    if (string.IsNullOrWhiteSpace(username))
-    {
-        errors[nameof(request.Username)] = ["Username is required."];
-    }
-
-    if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
-    {
-        errors[nameof(request.Email)] = ["A valid email address is required."];
-    }
-
-    if (errors.Count > 0)
-    {
-        return Results.ValidationProblem(errors);
-    }
-
-    var emailInUse = await dbContext.Users
-        .AnyAsync(user => user.Email == email, cancellationToken);
-
-    if (emailInUse)
-    {
-        return Results.Conflict(new { message = "That email address is already in use." });
-    }
-
-    var user = new User
-    {
-        Username = username!,
-        Email = email!
-    };
-
-    dbContext.Users.Add(user);
-    await dbContext.SaveChangesAsync(cancellationToken);
-
-    return Results.Created($"/api/users/{user.UserId}", new UserResponse(user.UserId, user.Username, user.Email));
-});
-
-//returns list of caught fish from newest to oldest
-app.MapGet("/api/fish", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
-{
-    var fish = await dbContext.Fish
-        .AsNoTracking()
-        .OrderByDescending(catchRecord => catchRecord.FishId)
-        .Select(catchRecord => new FishResponse(
-            catchRecord.FishId,
-            catchRecord.UserId,
-            catchRecord.User.Username,
-            catchRecord.Weight,
-            catchRecord.Length,
-            catchRecord.Species))
-        .ToListAsync(cancellationToken);
-
-    return Results.Ok(fish);
-});
-
-//handles adding new fish to database
-app.MapPost("/api/fish", async (
-    CreateFishRequest request, //contains data for the request to make a fish entry
-    FishTrackerDbContext dbContext,
-    CancellationToken cancellationToken) =>
-{
-    var errors = new Dictionary<string, string[]>();
-
-    if (request.UserId <= 0)
-    {
-        errors[nameof(request.UserId)] = ["A valid user ID is required."];
-    }
-
-    if (request.Weight <= 0)
-    {
-        errors[nameof(request.Weight)] = ["Weight must be greater than zero."];
-    }
-
-    if (request.Length <= 0)
-    {
-        errors[nameof(request.Length)] = ["Length must be greater than zero."];
-    }
-
-    if (!Enum.IsDefined(request.Species))
-    {
-        errors[nameof(request.Species)] = ["A valid fish species is required."];
-    }
-
-    if (errors.Count > 0)
-    {
-        return Results.ValidationProblem(errors);
-    }
-
-    var user = await dbContext.Users
-        .SingleOrDefaultAsync(existingUser => existingUser.UserId == request.UserId, cancellationToken); //retrieves exactly one item from the database, but if there is no matching, returns the default value null
-
-    if (user is null)
-    {
-        return Results.NotFound(new { message = $"User {request.UserId} was not found." });
-    }
-
-    var fish = new Fish
-    {
-        UserId = user.UserId,
-        Weight = request.Weight,
-        Length = request.Length,
-        Species = request.Species
-    };
-
-    dbContext.Fish.Add(fish);
-    await dbContext.SaveChangesAsync(cancellationToken);
-
-    return Results.Created($"/api/fish/{fish.FishId}", new FishResponse(
-        fish.FishId,
-        user.UserId,
-        user.Username,
-        fish.Weight,
-        fish.Length,
-        fish.Species));
-});
-
-
-app.MapGet("/api/gear", async (FishTrackerDbContext dbContext, CancellationToken cancellationToken) =>
-{
-    var gear = await dbContext.Gear
-    .AsNoTracking()
-    .OrderByDescending(gearRecord => gearRecord.GearId)
-    .Select(gearRecord => new GearResponse (
-        gearRecord.GearId,
-        gearRecord.UserId,
-        gearRecord.User.Username,
-        gearRecord.FishingRod,
-        gearRecord.Lure))
-    .ToListAsync(cancellationToken);
-    
-    return Results.Ok(gear);
-});
-
-app.MapPost("/api/gear", async (
-    CreateGearRequest request,
-    FishTrackerDbContext dbContext,
-    CancellationToken cancellationToken) =>
-{
-    var errors = new Dictionary<string, string[]>();
-
-    var fishingRod = request.FishingRod?.Trim();
-    var lure = request.Lure?.Trim();
-
-    if (request.UserId <= 0)
-    {
-        errors[nameof(request.UserId)] = ["A valid user ID is required."];
-    }
-
-    if (string.IsNullOrWhiteSpace(fishingRod))
-    {
-        errors[nameof(request.FishingRod)] = ["Fishing Rod is required"];
-    }
-
-    if (string.IsNullOrWhiteSpace(lure))
-    {
-        errors[nameof(request.Lure)] = ["Lure is required"];
-    }
-
-    if (errors.Count > 0)
-    {
-        return Results.ValidationProblem(errors);
-    }
-    var user = await dbContext.Users
-        .SingleOrDefaultAsync(existingUser => existingUser.UserId == request.UserId, cancellationToken);
-
-    if (user is null)
-    {
-        return Results.NotFound(new { message = $"User {request.UserId} was not found." });
-    }
-
-    var gear = new Gear
-    {
-        UserId = user.UserId,
-        FishingRod = fishingRod!,
-        Lure = lure!,
-    };
-
-    dbContext.Gear.Add(gear);
-    await dbContext.SaveChangesAsync(cancellationToken);
-
-    return Results.Created($"/api/gear/{gear.GearId}", new GearResponse(
-        gear.GearId,
-        user.UserId,
-        user.Username,
-        gear.FishingRod,
-        gear.Lure));
-
-
-});
-
-
-
-app.MapDefaultEndpoints(); //makes default endpoints for aspire
-
+var auth = app.MapGroup("/api").RequireRateLimiting("auth");
+auth.MapPost("/users", RegisterAsync);
+auth.MapPost("/auth/login", LoginAsync);
+var privateApi = app.MapGroup("/api").RequireAuthorization().RequireRateLimiting("api");
+privateApi.MapGet("/users/me", GetCurrentUserAsync);
+privateApi.MapDelete("/users/me", DeleteCurrentUserAsync);
+privateApi.MapGet("/fish", GetFishAsync);
+privateApi.MapPost("/fish", CreateFishAsync);
+privateApi.MapDelete("/fish/{fishId:int}", DeleteFishAsync);
+privateApi.MapGet("/gear", GetGearAsync);
+privateApi.MapPost("/gear", CreateGearAsync);
 app.Run();
 
-record CreateFishRequest(int UserId, decimal Weight, decimal Length, Species Species);
+static async Task<IResult> RegisterAsync(RegisterRequest request, FishTrackerDbContext db, IPasswordHasher<User> hasher, CancellationToken ct)
+{
+    var errors = ValidateRegistration(request, out var username, out var email);
+    if (errors.Count > 0) return Results.ValidationProblem(errors);
+    if (await db.Users.AnyAsync(u => u.Email == email, ct)) return Results.Conflict(new { message = "An account with that email already exists." });
+    var user = new User { Username = username!, Email = email!, PasswordHash = string.Empty };
+    user.PasswordHash = hasher.HashPassword(user, request.Password!);
+    db.Users.Add(user); await db.SaveChangesAsync(ct);
+    return Results.Created("/api/users/me", new UserResponse(user.UserId, user.Username, user.Email));
+}
 
-record FishResponse(int FishId, int UserId, string Username, decimal Weight, decimal Length, Species Species);
+static async Task<IResult> LoginAsync(LoginRequest request, FishTrackerDbContext db, IPasswordHasher<User> hasher, IOptions<JwtOptions> options, CancellationToken ct)
+{
+    var email = request.Email?.Trim().ToLowerInvariant();
+    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(request.Password)) return Results.ValidationProblem(new Dictionary<string, string[]> { ["credentials"] = ["Email and password are required."] });
+    var user = await db.Users.SingleOrDefaultAsync(u => u.Email == email, ct);
+    if (user is null || string.IsNullOrEmpty(user.PasswordHash) || hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed) return Results.Unauthorized();
+    var jwt = options.Value; var expires = DateTimeOffset.UtcNow.AddMinutes(jwt.ExpirationMinutes);
+    var token = new JwtSecurityToken(jwt.Issuer, jwt.Audience, [new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()), new Claim(ClaimTypes.Name, user.Username)], DateTime.UtcNow, expires.UtcDateTime, new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey)), SecurityAlgorithms.HmacSha256));
+    return Results.Ok(new LoginResponse(new JwtSecurityTokenHandler().WriteToken(token), expires));
+}
 
-record CreateUserRequest(string? Username, string? Email);
+static async Task<IResult> GetCurrentUserAsync(ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+{
+    var id = GetUserId(principal); if (id is null) return Results.Unauthorized();
+    var user = await db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.UserId == id, ct);
+    return user is null ? Results.Unauthorized() : Results.Ok(new UserResponse(user.UserId, user.Username, user.Email));
+}
 
-record UserResponse(int UserId, string Username, string Email);
+static async Task<IResult> DeleteCurrentUserAsync(ClaimsPrincipal principal, FishTrackerDbContext db, ILoggerFactory loggers, CancellationToken ct)
+{
+    var id = GetUserId(principal); if (id is null) return Results.Unauthorized();
+    var user = await db.Users.SingleOrDefaultAsync(u => u.UserId == id, ct); if (user is null) return Results.Unauthorized();
+    await using var tx = await db.Database.BeginTransactionAsync(ct);
+    db.Users.Remove(user); await db.SaveChangesAsync(ct); await tx.CommitAsync(ct);
+    loggers.CreateLogger("AccountDeletion").LogInformation("Deleted account {UserId} and its owned records.", id);
+    return Results.NoContent();
+}
 
-record CreateGearRequest(int UserId, string FishingRod, string Lure);
+static async Task<IResult> GetFishAsync(ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+{
+    var id = GetUserId(principal); if (id is null) return Results.Unauthorized();
+    if (!await UserExistsAsync(id.Value, db, ct)) return Results.Unauthorized();
+    return Results.Ok(await db.Fish.AsNoTracking().Where(f => f.UserId == id).OrderByDescending(f => f.FishId).Select(f => new FishResponse(f.FishId, f.Weight, f.Length, f.Species)).ToListAsync(ct));
+}
 
-record GearResponse(int GearId, int UserId, string Username, string FishingRod, string Lure);
+static async Task<IResult> CreateFishAsync(CreateFishRequest request, ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+{
+    var id = GetUserId(principal); if (id is null) return Results.Unauthorized();
+    if (!await UserExistsAsync(id.Value, db, ct)) return Results.Unauthorized();
+    var errors = new Dictionary<string, string[]>();
+    if (request.Weight is <= 0 or > 5000) errors[nameof(request.Weight)] = ["Weight must be greater than zero and no more than 5000."];
+    if (request.Length is <= 0 or > 1000) errors[nameof(request.Length)] = ["Length must be greater than zero and no more than 1000."];
+    if (!Enum.IsDefined(request.Species)) errors[nameof(request.Species)] = ["A valid fish species is required."];
+    if (errors.Count > 0) return Results.ValidationProblem(errors);
+    var fish = new Fish { UserId = id.Value, Weight = request.Weight, Length = request.Length, Species = request.Species }; db.Fish.Add(fish); await db.SaveChangesAsync(ct);
+    return Results.Created($"/api/fish/{fish.FishId}", new FishResponse(fish.FishId, fish.Weight, fish.Length, fish.Species));
+}
 
+static async Task<IResult> DeleteFishAsync(int fishId, ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+{
+    var id = GetUserId(principal); if (id is null) return Results.Unauthorized();
+    if (!await UserExistsAsync(id.Value, db, ct)) return Results.Unauthorized();
+    if (fishId <= 0) return Results.NotFound();
+    return await db.Fish.Where(f => f.FishId == fishId && f.UserId == id).ExecuteDeleteAsync(ct) == 0 ? Results.NotFound() : Results.NoContent();
+}
+
+static async Task<IResult> GetGearAsync(ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+{
+    var id = GetUserId(principal); if (id is null) return Results.Unauthorized();
+    if (!await UserExistsAsync(id.Value, db, ct)) return Results.Unauthorized();
+    return Results.Ok(await db.Gear.AsNoTracking().Where(g => g.UserId == id).OrderByDescending(g => g.GearId).Select(g => new GearResponse(g.GearId, g.FishingRod, g.Lure)).ToListAsync(ct));
+}
+
+static async Task<IResult> CreateGearAsync(CreateGearRequest request, ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+{
+    var id = GetUserId(principal); if (id is null) return Results.Unauthorized(); var rod = request.FishingRod?.Trim(); var lure = request.Lure?.Trim(); var errors = new Dictionary<string, string[]>();
+    if (!await UserExistsAsync(id.Value, db, ct)) return Results.Unauthorized();
+    if (string.IsNullOrWhiteSpace(rod) || rod.Length > 150) errors[nameof(request.FishingRod)] = ["Fishing rod is required and must be 150 characters or fewer."];
+    if (string.IsNullOrWhiteSpace(lure) || lure.Length > 150) errors[nameof(request.Lure)] = ["Lure is required and must be 150 characters or fewer."];
+    if (errors.Count > 0) return Results.ValidationProblem(errors);
+    var gear = new Gear { UserId = id.Value, FishingRod = rod!, Lure = lure! }; db.Gear.Add(gear); await db.SaveChangesAsync(ct);
+    return Results.Created($"/api/gear/{gear.GearId}", new GearResponse(gear.GearId, gear.FishingRod, gear.Lure));
+}
+
+static Dictionary<string, string[]> ValidateRegistration(RegisterRequest request, out string? username, out string? email)
+{
+    username = request.Username?.Trim(); email = request.Email?.Trim().ToLowerInvariant(); var errors = new Dictionary<string, string[]>();
+    if (string.IsNullOrWhiteSpace(username) || username.Length is < 3 or > 100) errors[nameof(request.Username)] = ["Username must be between 3 and 100 characters."];
+    if (string.IsNullOrWhiteSpace(email) || email.Length > 256 || !System.Net.Mail.MailAddress.TryCreate(email, out _)) errors[nameof(request.Email)] = ["A valid email address is required."];
+    if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length is < 12 or > 128) errors[nameof(request.Password)] = ["Password must be between 12 and 128 characters."];
+    return errors;
+}
+
+static int? GetUserId(ClaimsPrincipal p) => int.TryParse(p.FindFirstValue(ClaimTypes.NameIdentifier), out var id) && id > 0 ? id : null;
+static Task<bool> UserExistsAsync(int userId, FishTrackerDbContext db, CancellationToken ct) => db.Users.AnyAsync(user => user.UserId == userId, ct);
+public partial class Program;
+public sealed class JwtOptions { public required string SigningKey { get; init; } public required string Issuer { get; init; } public required string Audience { get; init; } public int ExpirationMinutes { get; init; } = 60; }
+public sealed record RegisterRequest(string? Username, string? Email, string? Password);
+public sealed record LoginRequest(string? Email, string? Password);
+public sealed record LoginResponse(string AccessToken, DateTimeOffset ExpiresAt);
+public sealed record CreateFishRequest(decimal Weight, decimal Length, Species Species);
+public sealed record FishResponse(int FishId, decimal Weight, decimal Length, Species Species);
+public sealed record UserResponse(int UserId, string Username, string Email);
+public sealed record CreateGearRequest(string? FishingRod, string? Lure);
+public sealed record GearResponse(int GearId, string FishingRod, string Lure);
+
+public sealed class DatabaseHealthCheck(FishTrackerDbContext db) : Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheck
+{
+    public async Task<Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult> CheckHealthAsync(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckContext context, CancellationToken cancellationToken = default) =>
+        await db.Database.CanConnectAsync(cancellationToken)
+            ? Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy()
+            : Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Unhealthy("Database connection failed.");
+}

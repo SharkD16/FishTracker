@@ -20,6 +20,7 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
             entity.HasKey(user => user.UserId);
             entity.Property(user => user.Username).IsRequired().HasMaxLength(100);
             entity.Property(user => user.Email).IsRequired().HasMaxLength(256);
+            entity.Property(user => user.PasswordHash).IsRequired().HasMaxLength(512);
             entity.HasIndex(user => user.Email).IsUnique();
         });
 
