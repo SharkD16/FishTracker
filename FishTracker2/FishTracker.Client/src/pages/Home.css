@@ -1,48 +1,174 @@
-.home {
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-    padding: 10px;
-    background-color:bisque;
+:root {
+    --sky-top: #e2f1f8;
+    --sky-bottom: #bce0ee;
+    --water-top: #1b4965;
+    --water-bottom: #0b2545;
+    --accent-cyan: #64dfdf;
+    --accent-gold: #f4a261;
 }
 
-.top{
-    flex: 1;
+/* Swiper background */
+.swiper-slide {
+    background-color: #ddd;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+
+.home {
+    width: 100%;
+    max-width: 480px;
+    min-height: 90vh;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    /* Aquatic background ONLY inside the rounded page */
+    background: linear-gradient(
+        180deg,
+        #e2f1f8 0%,
+        #bce0ee 30%,
+        #1b4965 70%,
+        #0b2545 100%
+    );
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ---------------- HEADER ---------------- */
+
+.home-header {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    padding: 20px;
 }
+
+.home-header h1 {
+    margin: 0;
+    padding: 25px 20px 20px 5px;
+    font-size: 42px;
+    font-family: 'Times New Roman', Times, serif;
+
+    color: #0b2545;
+
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+
+/* ---------------- AQUARIUM ---------------- */
+
+.aquarium {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5px;
+}
+
+.aquarium-water {
+    position: relative;
+
+    width: 100%;
+    max-width: 400px;
+    height: 450px;
+
+    background: linear-gradient(
+        180deg,
+        #64dfdf 0%,
+        #1b7895 35%,
+        #0b4968 70%,
+        #062f49 100%
+    );
+
+    border: 8px solid #6b4423;
+    border-radius: 25px;
+
+    overflow: hidden;
+
+    box-shadow:
+        inset 0 0 30px rgba(0, 0, 0, 0.3),
+        0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Light coming through the water */
+
+.aquarium-water::before {
+    content: "";
+
+    position: absolute;
+
+    top: -50px;
+    left: 20%;
+
+    width: 60%;
+    height: 150%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.12),
+        transparent
+    );
+
+    transform: rotate(12deg);
+
+    pointer-events: none;
+}
+
+
+/* ---------------- FISH ---------------- */
+
+.fish {
+    position: absolute;
+    font-size: 45px;
+}
+
+.fish1 {
+    top: 25%;
+    left: 20%;
+}
+
+.fish2 {
+    top: 50%;
+    right: 20%;
+}
+
+.fish3 {
+    bottom: 20%;
+    left: 40%;
+}
+
+
+/* ---------------- BOTTOM ---------------- */
 
 .bottom {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    padding: 5px;
 }
 
-.title {
-    font-size: 60px;
-    font-family: 'Times New Roman', Times, serif;
-    color: blue;
-    flex:1;
-    
-}
 .description {
+    margin: 0 0 20px 0;
+
     font-size: 15px;
-    color: red;
-    margin: 20px;
+    text-align: center;
+
+    color: white;
 }
 
-.buttons {
-    display:flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 100%;
-}
 
-.buttons button {
-    flex:1;
-    margin:3px;
-    padding:2px;
-    font-size: 15px;
-}
