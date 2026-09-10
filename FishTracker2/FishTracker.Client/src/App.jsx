@@ -1,60 +1,49 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import AddFish from './pages/AddFish'
+import Home from './pages/Home'
+import Stats from './pages/Stats'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
+import 'swiper/css'
 import './App.css'
 
 function App() {
-  const [apiStatus, setApiStatus] = useState({ state: 'loading' })
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
+    const [user, setUser] = useState(null)
+    const [showRegister, setShowRegister] = useState(false)
 
-  const checkApi = useCallback(async () => {
-    setApiStatus({ state: 'loading' })
+    if (user === null) {
+        if (showRegister) {
+            return <Register onBackToLogin={() => setShowRegister(false)} />
+        }
 
-    try {
-      const response = await fetch(`${apiBaseUrl}/api/status`)
-
-      if (!response.ok) {
-        throw new Error(`The API returned ${response.status}.`)
-      }
-
-      setApiStatus({ state: 'success', data: await response.json() })
-    } catch (error) {
-      setApiStatus({ state: 'error', message: error.message })
+        return (
+            <Login
+                onLogin={setUser}
+                onRegister={() => setShowRegister(true)}
+            />
+        )
     }
-  }, [apiBaseUrl])
 
-  useEffect(() => {
-    void checkApi()
-  }, [checkApi])
+    return (
+        <Swiper
+            initialSlide={1}
+            slidesPerView={1}
+        >
+            <SwiperSlide>
+                <AddFish />
+            </SwiperSlide>
 
-  return (
-    <main className="app">
-      <p className="eyebrow">FishTracker</p>
-      <h1>Local API check</h1>
-      <p className="description">
-        This page verifies that the React client can reach the local API and its SQLite database.
-      </p>
+            <SwiperSlide>
+                <Home />
+            </SwiperSlide>
 
-      <section className="status-card" aria-live="polite">
-        {apiStatus.state === 'loading' && <p>Checking the API...</p>}
-
-        {apiStatus.state === 'success' && (
-          <>
-            <span className="status success">Connected</span>
-            <p>The API is running and the {apiStatus.data.database} database is available.</p>
-          </>
-        )}
-
-        {apiStatus.state === 'error' && (
-          <>
-            <span className="status error">Not connected</span>
-            <p>{apiStatus.message}</p>
-            <p className="hint">Start the API at http://localhost:5554, then try again.</p>
-          </>
-        )}
-      </section>
-
-      <button type="button" onClick={checkApi}>Check again</button>
-    </main>
-  )
+            <SwiperSlide>
+                <Stats />
+            </SwiperSlide>
+        </Swiper>
+    )
 }
 
 export default App
