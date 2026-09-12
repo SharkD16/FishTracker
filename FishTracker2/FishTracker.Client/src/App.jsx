@@ -5,45 +5,50 @@ import AddFish from './pages/AddFish'
 import Home from './pages/Home'
 import Stats from './pages/Stats'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { useAuth } from './context/AuthContext'
 
 import 'swiper/css'
 import './App.css'
 
 function App() {
-    const [user, setUser] = useState(null)
-    const [showRegister, setShowRegister] = useState(false)
+const { user } = useAuth()
+const [showRegister, setShowRegister] = useState(false)
 
-    if (user === null) {
-        if (showRegister) {
-            return <Register onBackToLogin={() => setShowRegister(false)} />
-        }
-
+if (user === null) {
+    if (showRegister) {
         return (
-            <Login
-                onLogin={setUser}
-                onRegister={() => setShowRegister(true)}
+            <Register
+                onBackToLogin={() => setShowRegister(false)}
             />
         )
     }
 
     return (
-        <Swiper
-            initialSlide={1}
-            slidesPerView={1}
-        >
-            <SwiperSlide>
-                <AddFish />
-            </SwiperSlide>
-
-            <SwiperSlide>
-                <Home />
-            </SwiperSlide>
-
-            <SwiperSlide>
-                <Stats />
-            </SwiperSlide>
-        </Swiper>
+        <Login
+            onRegister={() => setShowRegister(true)}
+        />
     )
+}
+
+return (
+    <Swiper
+        initialSlide={1}
+        slidesPerView={1}
+    >
+        <SwiperSlide>
+            <AddFish />
+        </SwiperSlide>
+
+        <SwiperSlide>
+            <Home />
+        </SwiperSlide>
+
+        <SwiperSlide>
+            <Stats />
+        </SwiperSlide>
+    </Swiper>
+)
+
 }
 
 export default App
