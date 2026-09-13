@@ -1,0 +1,590 @@
+/* =========================
+   PAGE
+   ========================= */
+
+.remove-fish-page {
+    width: 100%;
+    max-width: 480px;
+    height: 90vh;
+
+    margin: 0 auto;
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    background: linear-gradient(
+        180deg,
+        #102a43 0%,
+        #0b2545 100%
+    );
+
+    color: white;
+
+    /* Same rounded container style as Stats */
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+
+/* =========================
+   HEADER
+   ========================= */
+
+.remove-fish-header {
+    flex-shrink: 0;
+
+    margin-bottom: 16px;
+    padding-top: 4px;
+
+    text-align: center;
+}
+
+.remove-fish-header h1 {
+    margin: 0 0 3px 0;
+
+    font-size: 26px;
+    font-weight: 700;
+
+    line-height: 1.15;
+
+    color: white;
+}
+
+.remove-fish-header p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.3;
+
+    color: #cbd5e1;
+}
+
+
+/* =========================
+   FISH LIST
+   ========================= */
+
+.fish-list {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    min-height: 0;
+
+    gap: 14px;
+
+    padding-right: 4px;
+    padding-bottom: 10px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* =========================
+   FISH ROW
+   ========================= */
+
+.fish-row {
+    display: grid;
+
+    grid-template-columns:
+        46px
+        minmax(0, 1.45fr)
+        minmax(0, 0.75fr)
+        minmax(0, 0.75fr)
+        72px;
+
+    align-items: center;
+
+    gap: 7px;
+
+    width: 100%;
+
+    padding: 13px 11px;
+
+    box-sizing: border-box;
+
+    flex-shrink: 0;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.14);
+}
+
+
+/* =========================
+   ROW FISH ICON
+   ========================= */
+
+.fish-row-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 46px;
+    height: 46px;
+
+    font-size: 31px;
+}
+
+
+/* =========================
+   ROW DATA
+   ========================= */
+
+.fish-column {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 4px;
+
+    min-width: 0;
+
+    text-align: center;
+}
+
+.column-label {
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.65px;
+
+    color: #94a3b8;
+
+    white-space: nowrap;
+}
+
+.column-value {
+    width: 100%;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    line-height: 1.2;
+
+    text-align: center;
+
+    color: white;
+}
+
+.species-column .column-value {
+    white-space: normal;
+
+    overflow-wrap: break-word;
+}
+
+
+/* =========================
+   REMOVE BUTTON
+   ========================= */
+
+.remove-button {
+    width: 72px;
+
+    padding: 8px 4px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ef4444;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #f87171;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.remove-button:hover {
+    background: rgba(239, 68, 68, 0.14);
+}
+
+
+/* =========================
+   STATUS MESSAGES
+   ========================= */
+
+.remove-message {
+    margin-top: 40px;
+
+    text-align: center;
+
+    color: #cbd5e1;
+}
+
+.remove-error {
+    flex-shrink: 0;
+
+    margin: 0 0 16px 0;
+
+    text-align: center;
+
+    color: #fca5a5;
+}
+
+
+/* =========================
+   SCROLLBAR
+   ========================= */
+
+.fish-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.fish-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fish-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+
+    border-radius: 10px;
+}
+
+.fish-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+
+/* =========================
+   MODAL OVERLAY
+   ========================= */
+
+.modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: rgba(0, 0, 0, 0.68);
+
+    z-index: 1000;
+}
+
+
+/* =========================
+   DELETE MODAL
+   ========================= */
+
+.delete-modal {
+    position: relative;
+
+    width: 100%;
+    max-width: 340px;
+
+    padding: 22px;
+
+    box-sizing: border-box;
+
+    background: white;
+
+    color: #102a43;
+
+    border-radius: 18px;
+
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+}
+
+
+/* =========================
+   MODAL TITLE
+   ========================= */
+
+.delete-modal h2 {
+    margin: 0 36px 22px 36px;
+
+    font-size: 22px;
+    line-height: 1.2;
+
+    text-align: center;
+
+    color: #0f172a;
+}
+
+
+/* =========================
+   CLOSE BUTTON
+   ========================= */
+
+.modal-close {
+    position: absolute;
+
+    top: 12px;
+    right: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #64748b;
+
+    font-size: 25px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   MODAL FISH SUMMARY
+   ========================= */
+
+.modal-fish-summary {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+.modal-fish-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 54px;
+    height: 54px;
+
+    margin: 0;
+
+    font-size: 46px;
+
+    flex-shrink: 0;
+}
+
+.modal-fish-summary h3 {
+    margin: 0;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    text-align: left;
+
+    color: #102a43;
+}
+
+
+/* =========================
+   MODAL STATS
+   ========================= */
+
+.modal-stats {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.modal-stats div {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 12px 8px;
+
+    background: #f1f5f9;
+
+    border-radius: 10px;
+}
+
+.modal-stat-label {
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+
+    color: #64748b;
+}
+
+.modal-stat-value {
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #102a43;
+}
+
+
+/* =========================
+   MODAL WARNING
+   ========================= */
+
+.modal-warning {
+    margin: 0 0 18px 0;
+
+    font-size: 13px;
+    line-height: 1.4;
+
+    text-align: center;
+
+    color: #64748b;
+}
+
+
+/* =========================
+   MODAL BUTTONS
+   ========================= */
+
+.modal-actions {
+    display: flex;
+
+    gap: 10px;
+}
+
+.modal-actions button {
+    flex: 1;
+
+    padding: 10px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.cancel-button {
+    background: #e2e8f0;
+
+    color: #0f172a;
+}
+
+.cancel-button:hover {
+    background: #cbd5e1;
+}
+
+.confirm-delete-button {
+    background: #ef4444;
+
+    color: white;
+}
+
+.confirm-delete-button:hover {
+    background: #dc2626;
+}
+
+
+/* =========================
+   SMALL SCREENS
+   ========================= */
+
+@media (max-width: 430px) {
+
+    .remove-fish-page {
+        padding: 15px;
+    }
+
+    .fish-row {
+        grid-template-columns:
+            40px
+            minmax(0, 1.3fr)
+            minmax(0, 0.65fr)
+            minmax(0, 0.65fr)
+            64px;
+
+        gap: 5px;
+
+        padding: 11px 8px;
+    }
+
+    .fish-row-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 27px;
+    }
+
+    .column-label {
+        font-size: 8px;
+    }
+
+    .column-value {
+        font-size: 12px;
+    }
+
+    .remove-button {
+        width: 64px;
+
+        padding: 7px 2px;
+
+        font-size: 11px;
+    }
+
+    .delete-modal {
+        max-width: 320px;
+
+        padding: 20px;
+    }
+
+    .delete-modal h2 {
+        margin-left: 32px;
+        margin-right: 32px;
+
+        font-size: 20px;
+    }
+
+    .modal-fish-summary {
+        gap: 12px;
+
+        margin-bottom: 18px;
+    }
+
+    .modal-fish-icon {
+        width: 48px;
+        height: 48px;
+
+        font-size: 41px;
+    }
+
+    .modal-fish-summary h3 {
+        font-size: 18px;
+    }
+}
