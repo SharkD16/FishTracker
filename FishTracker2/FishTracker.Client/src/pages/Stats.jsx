@@ -152,7 +152,7 @@ return (
                         style={{ left: `${lengthAvgPosition}%` }}
                     >
                         <span className="marker-text">
-                            Avg ({statsData.avgLength} in)
+                            Avg ({Number(statsData.avgLength).toFixed(2)} in)
                         </span>
                         <span className="marker-line"></span>
                     </div>
@@ -162,7 +162,7 @@ return (
                         style={{ left: `${lengthBestPosition}%` }}
                     >
                         <span className="marker-text">
-                            Record ({statsData.longestFish} in)
+                            Record ({Number(statsData.longestFish).toFixed(2)} in)
                         </span>
                         <span className="marker-line record-line"></span>
                     </div>
@@ -196,7 +196,7 @@ return (
                         style={{ left: `${weightAvgPosition}%` }}
                     >
                         <span className="marker-text">
-                            Avg ({statsData.avgWeight} lbs)
+                            Avg ({Number(statsData.avgWeight).toFixed(2)} lbs)
                         </span>
                         <span className="marker-line"></span>
                     </div>
@@ -206,7 +206,7 @@ return (
                         style={{ left: `${weightBestPosition}%` }}
                     >
                         <span className="marker-text">
-                            Record ({statsData.heaviestFish} lbs)
+                            Record ({Number(statsData.heaviestFish).toFixed(2)} lbs)
                         </span>
                         <span className="marker-line record-line"></span>
                     </div>
