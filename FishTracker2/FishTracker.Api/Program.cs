@@ -86,9 +86,13 @@ var auth = app.MapGroup("/api").RequireRateLimiting("auth");
 auth.MapPost("/users", RegisterAsync);
 auth.MapPost("/auth/login", LoginAsync);
 var privateApi = app.MapGroup("/api").RequireAuthorization().RequireRateLimiting("api");
+
 privateApi.MapGet("/users/me", GetCurrentUserAsync);
+privateApi.MapPatch("/users/me/username", UpdateUsernameAsync);
+privateApi.MapPatch("/users/me/email", UpdateEmailAsync);
 privateApi.MapDelete("/users/me", DeleteCurrentUserAsync);
 privateApi.MapGet("/users/me/stats", GetCurrentUserStatsAsync);
+
 privateApi.MapGet("/fish", GetFishAsync);
 privateApi.MapPost("/fish", CreateFishAsync);
 privateApi.MapDelete("/fish/{fishId:int}", DeleteFishAsync);
@@ -140,6 +144,118 @@ static async Task<IResult> GetCurrentUserStatsAsync(
         avgWeight,
         avgLength
     });
+}
+
+static async Task<IResult> UpdateUsernameAsync(
+    UpdateUsernameRequest request,
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
+{
+    var id = GetUserId(principal);
+
+    if (id is null)
+        return Results.Unauthorized();
+
+    var username = request.Username?.Trim();
+
+    if (string.IsNullOrWhiteSpace(username) ||
+        username.Length is < 3 or > 100)
+    {
+        return Results.ValidationProblem(
+            new Dictionary<string, string[]>
+            {
+                ["username"] =
+                [
+                    "Username must be between 3 and 100 characters."
+                ]
+            }
+        );
+    }
+
+    var user = await db.Users.SingleOrDefaultAsync(
+        u => u.UserId == id.Value,
+        ct
+    );
+
+    if (user is null)
+        return Results.Unauthorized();
+
+    user.Username = username;
+
+    await db.SaveChangesAsync(ct);
+
+    return Results.Ok(
+        new UserResponse(
+            user.UserId,
+            user.Username,
+            user.Email
+        )
+    );
+}
+
+static async Task<IResult> UpdateEmailAsync(
+    UpdateEmailRequest request,
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
+{
+    var id = GetUserId(principal);
+
+    if (id is null)
+        return Results.Unauthorized();
+
+    var email = request.Email?.Trim().ToLowerInvariant();
+
+    if (string.IsNullOrWhiteSpace(email) ||
+        email.Length > 256 ||
+        !System.Net.Mail.MailAddress.TryCreate(email, out _))
+    {
+        return Results.ValidationProblem(
+            new Dictionary<string, string[]>
+            {
+                ["email"] =
+                [
+                    "A valid email address is required."
+                ]
+            }
+        );
+    }
+
+    var emailExists = await db.Users.AnyAsync(
+        u => u.Email == email && u.UserId != id.Value,
+        ct
+    );
+
+    if (emailExists)
+    {
+        return Results.Conflict(
+            new
+            {
+                message = "An account with that email already exists."
+            }
+        );
+    }
+
+    var user = await db.Users.SingleOrDefaultAsync(
+        u => u.UserId == id.Value,
+        ct
+    );
+
+    if (user is null)
+        return Results.Unauthorized();
+
+    user.Email = email;
+
+    await db.SaveChangesAsync(ct);
+
+    return Results.Ok(
+        new UserResponse(
+            user.UserId,
+            user.Username,
+            user.Email
+        )
+    );
 }
 
 static async Task<IResult> RegisterAsync(RegisterRequest request, FishTrackerDbContext db, IPasswordHasher<User> hasher, CancellationToken ct)
@@ -242,6 +358,8 @@ public partial class Program;
 public sealed class JwtOptions { public required string SigningKey { get; init; } public required string Issuer { get; init; } public required string Audience { get; init; } public int ExpirationMinutes { get; init; } = 60; }
 public sealed record RegisterRequest(string? Username, string? Email, string? Password);
 public sealed record LoginRequest(string? Email, string? Password);
+public sealed record UpdateUsernameRequest(string? Username);
+public sealed record UpdateEmailRequest(string? Email);
 public sealed record LoginResponse(string AccessToken, DateTimeOffset ExpiresAt);
 public sealed record CreateFishRequest(decimal Weight, decimal Length, Species Species);
 public sealed record FishResponse(int FishId, decimal Weight, decimal Length, Species Species);
