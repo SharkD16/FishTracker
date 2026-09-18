@@ -5,6 +5,7 @@ import AddFish from './pages/AddFish'
 import Home from './pages/Home'
 import Stats from './pages/Stats'
 import RemoveFish from './pages/RemoveFish'
+import Settings from './pages/Settings'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useAuth } from './context/AuthContext'
 
@@ -50,6 +51,9 @@ return (
 
         <SwiperSlide>
             <RemoveFish />
+        </SwiperSlide>
+        <SwiperSlide>
+            <Settings />
         </SwiperSlide>
 
     </Swiper>
