@@ -5,6 +5,9 @@ public enum Species
     SmallmouthBass,
     LargemouthBass,
     Catfish,
-    Bluegill
-
+    Bluegill,
+    Salmon,
+    StripedBass,
+    Pike, 
+    Gar, 
 }
