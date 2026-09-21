@@ -8,7 +8,9 @@
 }
 
 
-/* ---------------- SWIPER ---------------- */
+/* ==================================================
+   SWIPER
+   ================================================== */
 
 .swiper-slide {
     background-color: #ddd;
@@ -17,7 +19,9 @@
 }
 
 
-/* ---------------- PAGE ---------------- */
+/* ==================================================
+   PAGE
+   ================================================== */
 
 .home {
     width: 100%;
@@ -48,7 +52,9 @@
 }
 
 
-/* ---------------- HEADER ---------------- */
+/* ==================================================
+   HEADER
+   ================================================== */
 
 .home-header {
     display: flex;
@@ -83,7 +89,9 @@
 }
 
 
-/* ---------------- AQUARIUM ---------------- */
+/* ==================================================
+   AQUARIUM
+   ================================================== */
 
 .aquarium {
     flex: 1;
@@ -111,21 +119,14 @@
         #062f49 100%
     );
 
-    border:
-        8px solid
-        #6b4423;
-
+    border: 8px solid #6b4423;
     border-radius: 25px;
 
     overflow: hidden;
 
     box-shadow:
-        inset
-        0 0 30px
-        rgba(0, 0, 0, 0.3),
-
-        0 8px 20px
-        rgba(0, 0, 0, 0.3);
+        inset 0 0 30px rgba(0, 0, 0, 0.3),
+        0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -157,7 +158,9 @@
 }
 
 
-/* ---------------- STATIONARY FISH ---------------- */
+/* ==================================================
+   STATIONARY FISH
+   ================================================== */
 
 .stationary-fish {
     position: absolute;
@@ -178,7 +181,9 @@
 }
 
 
-/* ---------------- ADD BUTTON ---------------- */
+/* ==================================================
+   ADD BUTTON
+   ================================================== */
 
 .aquarium-add-button {
     position: absolute;
@@ -218,8 +223,7 @@
         0 4px 12px
         rgba(0, 0, 0, 0.25);
 
-    backdrop-filter:
-        blur(5px);
+    backdrop-filter: blur(5px);
 
     transition:
         transform 0.2s ease,
@@ -245,11 +249,15 @@
 }
 
 
-/* ---------------- MODAL OVERLAY ---------------- */
+/* ==================================================
+   CUSTOMIZE AQUARIUM MODAL
+   ================================================== */
+
+
+/* ---------------- OVERLAY ---------------- */
 
 .aquarium-modal-overlay {
     position: fixed;
-
     inset: 0;
 
     z-index: 1000;
@@ -265,23 +273,32 @@
     background:
         rgba(3, 20, 32, 0.65);
 
-    backdrop-filter:
-        blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 
-/* ---------------- MODAL ---------------- */
+/* ---------------- MODAL CONTAINER ---------------- */
 
 .aquarium-modal {
     width: 100%;
     max-width: 410px;
 
-    max-height: 80vh;
+    /*
+        Prevent the popup from extending beyond
+        the top or bottom of the browser.
+    */
+    max-height: calc(100vh - 40px);
 
     display: flex;
     flex-direction: column;
 
+    /*
+        The modal itself never scrolls.
+        Only .aquarium-modal-content scrolls.
+    */
     overflow: hidden;
+
+    box-sizing: border-box;
 
     border:
         2px solid
@@ -289,14 +306,7 @@
 
     border-radius: 22px;
 
-    background:
-        linear-gradient(
-            180deg,
-            #e2f1f8 0%,
-            #bce0ee 22%,
-            #0b4968 22%,
-            #062f49 100%
-        );
+    background: #062f49;
 
     box-shadow:
         0 18px 50px
@@ -307,6 +317,13 @@
 /* ---------------- MODAL HEADER ---------------- */
 
 .aquarium-modal-header {
+    position: relative;
+
+    z-index: 3;
+
+    flex: 0 0 auto;
+    flex-shrink: 0;
+
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -317,6 +334,19 @@
         22px
         22px
         18px;
+
+    box-sizing: border-box;
+
+    /*
+        Opaque background prevents fish rows
+        from appearing through the header
+        while scrolling.
+    */
+    background: linear-gradient(
+        180deg,
+        #e2f1f8 0%,
+        #bce0ee 100%
+    );
 
     color: #0b2545;
 }
@@ -342,6 +372,8 @@
     color: #35586c;
 }
 
+
+/* ---------------- CLOSE BUTTON ---------------- */
 
 .aquarium-modal-close {
     flex-shrink: 0;
@@ -370,22 +402,72 @@
 }
 
 
-/* ---------------- MODAL CONTENT ---------------- */
+/* ---------------- SCROLLABLE FISH LIST ---------------- */
 
 .aquarium-modal-content {
-    flex: 1;
+    position: relative;
 
+    z-index: 1;
+
+    /*
+        This allows this section to take the
+        remaining space between the header
+        and footer.
+    */
+    flex: 1 1 auto;
+
+    /*
+        IMPORTANT:
+        Without min-height: 0, a flex child
+        can refuse to shrink and get clipped.
+    */
+    min-height: 0;
+
+    /*
+        ONLY this section scrolls.
+    */
     overflow-y: auto;
+    overflow-x: hidden;
 
     padding:
-        12px
+        18px
         18px;
+
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        180deg,
+        #0b4968 0%,
+        #062f49 100%
+    );
 
     scrollbar-width: thin;
 
     scrollbar-color:
         #64dfdf
         transparent;
+
+    overscroll-behavior: contain;
+}
+
+
+/* Chrome / Safari scrollbar */
+
+.aquarium-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+
+.aquarium-modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.aquarium-modal-content::-webkit-scrollbar-thumb {
+    background:
+        rgba(100, 223, 223, 0.6);
+
+    border-radius: 10px;
 }
 
 
@@ -419,6 +501,11 @@
 }
 
 
+.aquarium-species-row:last-child {
+    margin-bottom: 0;
+}
+
+
 /* ---------------- SPECIES INFO ---------------- */
 
 .aquarium-species-info {
@@ -448,6 +535,9 @@
 
     max-width: 56px;
     max-height: 40px;
+
+    width: auto;
+    height: auto;
 
     object-fit: contain;
 
@@ -503,8 +593,7 @@
 
     outline: none;
 
-    background:
-        #e8f6f8;
+    background: #e8f6f8;
 
     color: #0b2545;
 
@@ -573,19 +662,33 @@
 /* ---------------- MODAL FOOTER ---------------- */
 
 .aquarium-modal-footer {
+    position: relative;
+
+    z-index: 3;
+
+    flex: 0 0 auto;
+    flex-shrink: 0;
+
     padding:
         15px
         18px
         18px;
 
+    box-sizing: border-box;
+
     border-top:
         1px solid
         rgba(100, 223, 223, 0.25);
 
-    background:
-        rgba(4, 35, 54, 0.55);
+    /*
+        Opaque background prevents rows from
+        appearing behind the footer.
+    */
+    background: #042336;
 }
 
+
+/* ---------------- TOTAL ---------------- */
 
 .aquarium-total {
     margin-bottom: 12px;
@@ -648,11 +751,9 @@
 
 
 .aquarium-save-button {
-    background:
-        #64dfdf;
+    background: #64dfdf;
 
-    color:
-        #062f49;
+    color: #062f49;
 
     box-shadow:
         0 4px 10px
@@ -667,7 +768,9 @@
 }
 
 
-/* ---------------- BUBBLES ---------------- */
+/* ==================================================
+   BUBBLES
+   ================================================== */
 
 .bubble {
     position: absolute;
@@ -761,7 +864,9 @@
 }
 
 
-/* ---------------- AQUARIUM FLOOR ---------------- */
+/* ==================================================
+   AQUARIUM FLOOR
+   ================================================== */
 
 .aquarium-floor {
     position: absolute;
@@ -782,7 +887,9 @@
 }
 
 
-/* ---------------- BOTTOM ---------------- */
+/* ==================================================
+   BOTTOM
+   ================================================== */
 
 .bottom {
     display: flex;
