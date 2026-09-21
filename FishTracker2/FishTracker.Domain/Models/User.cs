@@ -12,4 +12,5 @@ public class User
     public List<Fish> Fish { get; set; } = new();
 
     public List<Gear> Gear { get; set; } = new();
+    public ICollection<FishingTrip> FishingTrips { get; set; } = [];
 }
