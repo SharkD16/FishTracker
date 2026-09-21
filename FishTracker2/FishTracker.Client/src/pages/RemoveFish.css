@@ -23,12 +23,19 @@
 
     color: white;
 
-    /* Same rounded container style as Stats */
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.2);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
 }
 
 
@@ -45,6 +52,7 @@
     text-align: center;
 }
 
+
 .remove-fish-header h1 {
     margin: 0 0 3px 0;
 
@@ -55,6 +63,7 @@
 
     color: white;
 }
+
 
 .remove-fish-header p {
     margin: 0;
@@ -114,17 +123,23 @@
 
     flex-shrink: 0;
 
-    background: rgba(255, 255, 255, 0.06);
+    background:
+        rgba(255, 255, 255, 0.06);
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+
     border-radius: 16px;
 
-    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.14);
+    box-shadow:
+        0 5px 14px
+        rgba(0, 0, 0, 0.14);
 }
 
 
 /* =========================
-   ROW FISH ICON
+   ROW FISH IMAGE
    ========================= */
 
 .fish-row-icon {
@@ -135,8 +150,25 @@
 
     width: 46px;
     height: 46px;
+}
 
-    font-size: 31px;
+
+.fish-row-icon img {
+    display: block;
+
+    max-width: 44px;
+    max-height: 40px;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 2px 2px
+            rgba(0, 0, 0, 0.25)
+        );
 }
 
 
@@ -157,6 +189,7 @@
     text-align: center;
 }
 
+
 .column-label {
     font-size: 9px;
     font-weight: 700;
@@ -168,6 +201,7 @@
 
     white-space: nowrap;
 }
+
 
 .column-value {
     width: 100%;
@@ -181,6 +215,7 @@
 
     color: white;
 }
+
 
 .species-column .column-value {
     white-space: normal;
@@ -200,7 +235,10 @@
 
     box-sizing: border-box;
 
-    border: 1px solid #ef4444;
+    border:
+        1px solid
+        #ef4444;
+
     border-radius: 9px;
 
     background: transparent;
@@ -213,8 +251,10 @@
     cursor: pointer;
 }
 
+
 .remove-button:hover {
-    background: rgba(239, 68, 68, 0.14);
+    background:
+        rgba(239, 68, 68, 0.14);
 }
 
 
@@ -229,6 +269,7 @@
 
     color: #cbd5e1;
 }
+
 
 .remove-error {
     flex-shrink: 0;
@@ -249,18 +290,23 @@
     width: 5px;
 }
 
+
 .fish-list::-webkit-scrollbar-track {
     background: transparent;
 }
 
+
 .fish-list::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background:
+        rgba(255, 255, 255, 0.2);
 
     border-radius: 10px;
 }
 
+
 .fish-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.35);
+    background:
+        rgba(255, 255, 255, 0.35);
 }
 
 
@@ -281,7 +327,8 @@
 
     box-sizing: border-box;
 
-    background: rgba(0, 0, 0, 0.68);
+    background:
+        rgba(0, 0, 0, 0.68);
 
     z-index: 1000;
 }
@@ -307,7 +354,9 @@
 
     border-radius: 18px;
 
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+    box-shadow:
+        0 18px 42px
+        rgba(0, 0, 0, 0.32);
 }
 
 
@@ -316,7 +365,11 @@
    ========================= */
 
 .delete-modal h2 {
-    margin: 0 36px 22px 36px;
+    margin:
+        0
+        36px
+        22px
+        36px;
 
     font-size: 22px;
     line-height: 1.2;
@@ -374,21 +427,40 @@
     margin-bottom: 20px;
 }
 
+
 .modal-fish-icon {
     display: flex;
 
     align-items: center;
     justify-content: center;
 
-    width: 54px;
+    width: 70px;
     height: 54px;
 
     margin: 0;
 
-    font-size: 46px;
-
     flex-shrink: 0;
 }
+
+
+.modal-fish-icon img {
+    display: block;
+
+    max-width: 68px;
+    max-height: 52px;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 2px 2px
+            rgba(0, 0, 0, 0.2)
+        );
+}
+
 
 .modal-fish-summary h3 {
     margin: 0;
@@ -411,12 +483,15 @@
 .modal-stats {
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        1fr
+        1fr;
 
     gap: 10px;
 
     margin-bottom: 18px;
 }
+
 
 .modal-stats div {
     display: flex;
@@ -433,6 +508,7 @@
     border-radius: 10px;
 }
 
+
 .modal-stat-label {
     font-size: 9px;
     font-weight: 700;
@@ -442,6 +518,7 @@
 
     color: #64748b;
 }
+
 
 .modal-stat-value {
     font-size: 16px;
@@ -456,7 +533,11 @@
    ========================= */
 
 .modal-warning {
-    margin: 0 0 18px 0;
+    margin:
+        0
+        0
+        18px
+        0;
 
     font-size: 13px;
     line-height: 1.4;
@@ -477,6 +558,7 @@
     gap: 10px;
 }
 
+
 .modal-actions button {
     flex: 1;
 
@@ -491,21 +573,25 @@
     cursor: pointer;
 }
 
+
 .cancel-button {
     background: #e2e8f0;
 
     color: #0f172a;
 }
 
+
 .cancel-button:hover {
     background: #cbd5e1;
 }
+
 
 .confirm-delete-button {
     background: #ef4444;
 
     color: white;
 }
+
 
 .confirm-delete-button:hover {
     background: #dc2626;
@@ -522,6 +608,7 @@
         padding: 15px;
     }
 
+
     .fish-row {
         grid-template-columns:
             40px
@@ -535,20 +622,28 @@
         padding: 11px 8px;
     }
 
+
     .fish-row-icon {
         width: 40px;
         height: 40px;
-
-        font-size: 27px;
     }
+
+
+    .fish-row-icon img {
+        max-width: 38px;
+        max-height: 36px;
+    }
+
 
     .column-label {
         font-size: 8px;
     }
 
+
     .column-value {
         font-size: 12px;
     }
+
 
     .remove-button {
         width: 64px;
@@ -558,11 +653,13 @@
         font-size: 11px;
     }
 
+
     .delete-modal {
         max-width: 320px;
 
         padding: 20px;
     }
+
 
     .delete-modal h2 {
         margin-left: 32px;
@@ -571,18 +668,25 @@
         font-size: 20px;
     }
 
+
     .modal-fish-summary {
         gap: 12px;
 
         margin-bottom: 18px;
     }
 
-    .modal-fish-icon {
-        width: 48px;
-        height: 48px;
 
-        font-size: 41px;
+    .modal-fish-icon {
+        width: 62px;
+        height: 48px;
     }
+
+
+    .modal-fish-icon img {
+        max-width: 60px;
+        max-height: 46px;
+    }
+
 
     .modal-fish-summary h3 {
         font-size: 18px;
