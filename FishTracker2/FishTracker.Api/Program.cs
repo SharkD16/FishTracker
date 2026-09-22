@@ -348,7 +348,7 @@ static Dictionary<string, string[]> ValidateRegistration(RegisterRequest request
     username = request.Username?.Trim(); email = request.Email?.Trim().ToLowerInvariant(); var errors = new Dictionary<string, string[]>();
     if (string.IsNullOrWhiteSpace(username) || username.Length is < 3 or > 100) errors[nameof(request.Username)] = ["Username must be between 3 and 100 characters."];
     if (string.IsNullOrWhiteSpace(email) || email.Length > 256 || !System.Net.Mail.MailAddress.TryCreate(email, out _)) errors[nameof(request.Email)] = ["A valid email address is required."];
-    if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length is < 12 or > 128) errors[nameof(request.Password)] = ["Password must be between 12 and 128 characters."];
+    if (string.IsNullOrWhiteSpace(request.Password) || request.Password.Length is <8 or > 128) errors[nameof(request.Password)] = ["Password must be between 8 and 128 characters."];
     return errors;
 }
 

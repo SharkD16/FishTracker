@@ -45,10 +45,10 @@ function Register({ onBackToLogin }) {
         }
 
 
-        if (formData.password.length < 12) {
+        if (formData.password.length < 8) {
 
             setError(
-                'Password must be at least 12 characters long.'
+                'Password must be at least 8 characters long.'
             )
 
             return
@@ -208,13 +208,13 @@ function Register({ onBackToLogin }) {
                             placeholder="Create a password"
                             value={formData.password}
                             onChange={handleChange}
-                            minLength={12}
+                            minLength={8}
                             maxLength={128}
                             required
                         />
 
                         <span className="password-hint">
-                            Must be at least 12 characters
+                            Must be at least 8 characters
                         </span>
 
                     </div>
@@ -233,7 +233,7 @@ function Register({ onBackToLogin }) {
                             placeholder="Repeat your password"
                             value={formData.confirmPassword}
                             onChange={handleChange}
-                            minLength={12}
+                            minLength={8}
                             maxLength={128}
                             required
                         />
