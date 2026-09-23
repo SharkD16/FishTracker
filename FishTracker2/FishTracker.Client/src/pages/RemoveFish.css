@@ -311,7 +311,7 @@
 
 
 /* =========================
-   MODAL OVERLAY
+   DELETE MODAL OVERLAY
    ========================= */
 
 .modal-overlay {
@@ -409,6 +409,13 @@
     line-height: 1;
 
     cursor: pointer;
+}
+
+
+.modal-close:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
 }
 
 
@@ -581,7 +588,7 @@
 }
 
 
-.cancel-button:hover {
+.cancel-button:hover:not(:disabled) {
     background: #cbd5e1;
 }
 
@@ -593,8 +600,179 @@
 }
 
 
-.confirm-delete-button:hover {
+.confirm-delete-button:hover:not(:disabled) {
     background: #dc2626;
+}
+
+
+.modal-actions button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* ==================================================
+   DELETE SUCCESS POPUP
+   ================================================== */
+
+.remove-success-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background:
+        rgba(3, 20, 32, 0.55);
+
+    backdrop-filter: blur(4px);
+
+    animation:
+        remove-success-overlay-in
+        0.2s ease;
+}
+
+
+.remove-success-popup {
+    width: 100%;
+    max-width: 300px;
+
+    padding:
+        30px
+        25px;
+
+    box-sizing: border-box;
+
+    border:
+        2px solid
+        rgba(100, 223, 223, 0.7);
+
+    border-radius: 22px;
+
+    background: linear-gradient(
+        180deg,
+        #0b4968 0%,
+        #062f49 100%
+    );
+
+    color: white;
+
+    text-align: center;
+
+    box-shadow:
+        0 18px 50px
+        rgba(0, 0, 0, 0.4);
+
+    animation:
+        remove-success-popup-in
+        0.25s ease;
+}
+
+
+/* =========================
+   SUCCESS CHECKMARK
+   ========================= */
+
+.remove-success-check {
+    width: 58px;
+    height: 58px;
+
+    margin:
+        0
+        auto
+        16px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    background: #64dfdf;
+
+    color: #062f49;
+
+    font-size: 34px;
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.2);
+}
+
+
+/* =========================
+   SUCCESS TEXT
+   ========================= */
+
+.remove-success-popup h2 {
+    margin:
+        0
+        0
+        8px;
+
+    font-size: 24px;
+
+    font-family:
+        'Times New Roman',
+        Times,
+        serif;
+
+    color: #64dfdf;
+}
+
+
+.remove-success-popup p {
+    margin: 0;
+
+    font-size: 14px;
+
+    color: #bce0ee;
+}
+
+
+/* =========================
+   SUCCESS ANIMATIONS
+   ========================= */
+
+@keyframes remove-success-overlay-in {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+@keyframes remove-success-popup-in {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(0.9)
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
 }
 
 
