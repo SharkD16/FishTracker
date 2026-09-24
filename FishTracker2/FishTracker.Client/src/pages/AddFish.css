@@ -17,92 +17,117 @@
         #1b4965 100%
     );
 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.25);
 
     display: flex;
     flex-direction: column;
 }
 
 
-/* Header */
+/* ---------------- HEADER ---------------- */
 
 .add-fish-header {
     text-align: center;
+
     margin-bottom: 20px;
 }
 
+
 .add-fish-header h1 {
-    margin: 0 0 5px 0;
+    margin:
+        0
+        0
+        5px
+        0;
 
     font-size: 30px;
+
     color: #0b2545;
 }
+
 
 .add-fish-header p {
     margin: 0;
 
     color: #31566b;
+
     font-size: 14px;
 }
 
 
-/* Form */
+/* ---------------- FORM ---------------- */
 
 .fish-form {
     display: flex;
     flex-direction: column;
+
     gap: 16px;
 }
 
 
-
-/* Individual fields */
+/* ---------------- INDIVIDUAL FIELDS ---------------- */
 
 .form-group {
     display: flex;
     flex-direction: column;
+
     gap: 6px;
 }
+
 
 .form-group label {
     font-size: 14px;
     font-weight: 600;
+
     color: #0b2545;
 }
+
 
 .required {
     color: #e63946;
 }
 
 
-/* Inputs */
+/* ---------------- INPUTS ---------------- */
 
 .form-group input,
 .form-group select {
     width: 100%;
 
-    padding: 11px 12px;
+    padding:
+        11px
+        12px;
 
     box-sizing: border-box;
 
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.8);
+
     border-radius: 10px;
 
-    background: rgba(255, 255, 255, 0.75);
+    background:
+        rgba(255, 255, 255, 0.75);
 
     font-size: 15px;
+
     color: #0b2545;
 
     outline: none;
 }
 
+
 .form-group input:focus,
 .form-group select:focus {
-    border: 2px solid #64dfdf;
+    border:
+        2px solid
+        #64dfdf;
 }
 
 
-/* Units */
+/* ---------------- UNITS ---------------- */
 
 .input-with-unit {
     display: flex;
@@ -111,18 +136,21 @@
     gap: 8px;
 }
 
+
 .input-with-unit input {
     flex: 1;
 }
 
+
 .input-with-unit span {
     font-size: 14px;
     font-weight: 600;
+
     color: white;
 }
 
 
-/* Button */
+/* ---------------- ADD BUTTON ---------------- */
 
 .add-fish-button {
     margin-top: 5px;
@@ -133,42 +161,247 @@
     border-radius: 12px;
 
     background-color: #64dfdf;
+
     color: #0b2545;
 
     font-size: 16px;
     font-weight: 700;
 
     cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
 }
 
-.add-fish-button:hover {
+
+.add-fish-button:hover:not(:disabled) {
     background-color: #4fc4c4;
 }
 
+
+.add-fish-button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+
+.add-fish-button:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+}
+
+
+/* ==================================================
+   SUCCESS POPUP
+   ================================================== */
+
+.fish-success-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background:
+        rgba(3, 20, 32, 0.55);
+
+    backdrop-filter: blur(4px);
+
+    animation:
+        success-overlay-in
+        0.2s ease;
+}
+
+
+.fish-success-popup {
+    width: 100%;
+    max-width: 300px;
+
+    padding:
+        30px
+        25px;
+
+    box-sizing: border-box;
+
+    border:
+        2px solid
+        rgba(100, 223, 223, 0.7);
+
+    border-radius: 22px;
+
+    background: linear-gradient(
+        180deg,
+        #0b4968 0%,
+        #062f49 100%
+    );
+
+    color: white;
+
+    text-align: center;
+
+    box-shadow:
+        0 18px 50px
+        rgba(0, 0, 0, 0.4);
+
+    animation:
+        success-popup-in
+        0.25s ease;
+}
+
+
+/* ---------------- CHECKMARK ---------------- */
+
+.fish-success-check {
+    width: 58px;
+    height: 58px;
+
+    margin:
+        0
+        auto
+        16px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    background: #64dfdf;
+
+    color: #062f49;
+
+    font-size: 34px;
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.2);
+}
+
+
+/* ---------------- SUCCESS TEXT ---------------- */
+
+.fish-success-popup h2 {
+    margin:
+        0
+        0
+        8px;
+
+    font-size: 24px;
+
+    font-family:
+        'Times New Roman',
+        Times,
+        serif;
+
+    color: #64dfdf;
+}
+
+
+.fish-success-popup p {
+    margin: 0;
+
+    font-size: 14px;
+
+    color: #bce0ee;
+}
+
+
+/* ---------------- SUCCESS ANIMATIONS ---------------- */
+
+@keyframes success-overlay-in {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+@keyframes success-popup-in {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(0.9)
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
+}
+
+
+/* ==================================================
+   DECORATIVE FISH
+   ================================================== */
+
 .fish {
     position: absolute;
+
     font-size: 35px;
 
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
+    animation-timing-function:
+        ease-in-out;
+
+    animation-iteration-count:
+        infinite;
 }
+
 
 .fish1 {
     top: 30%;
-    animation: swim1 8s infinite linear;
+
+    animation:
+        swim1
+        8s
+        infinite
+        linear;
 }
+
 
 .fish2 {
     top: 55%;
-    animation: swim2 11s infinite linear;
+
+    animation:
+        swim2
+        11s
+        infinite
+        linear;
 }
+
 
 .fish3 {
     top: 70%;
-    animation: swim3 9s infinite linear;
+
+    animation:
+        swim3
+        9s
+        infinite
+        linear;
 }
 
+
 @keyframes swim1 {
+
     0% {
         left: -50px;
     }
@@ -182,7 +415,9 @@
     }
 }
 
+
 @keyframes swim2 {
+
     0% {
         left: 90%;
     }
@@ -196,7 +431,9 @@
     }
 }
 
+
 @keyframes swim3 {
+
     0% {
         left: -50px;
     }
