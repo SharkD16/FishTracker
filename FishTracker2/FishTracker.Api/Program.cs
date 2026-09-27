@@ -96,8 +96,12 @@ privateApi.MapGet("/users/me/stats", GetCurrentUserStatsAsync);
 privateApi.MapGet("/fish", GetFishAsync);
 privateApi.MapPost("/fish", CreateFishAsync);
 privateApi.MapDelete("/fish/{fishId:int}", DeleteFishAsync);
+
 privateApi.MapGet("/gear", GetGearAsync);
 privateApi.MapPost("/gear", CreateGearAsync);
+
+privateApi.MapPost("/trips/start", StartFishingTripAsync);
+
 app.Run();
 
 static async Task<IResult> GetCurrentUserStatsAsync(
@@ -341,6 +345,61 @@ static async Task<IResult> CreateGearAsync(CreateGearRequest request, ClaimsPrin
     if (errors.Count > 0) return Results.ValidationProblem(errors);
     var gear = new Gear { UserId = id.Value, FishingRod = rod!, Lure = lure! }; db.Gear.Add(gear); await db.SaveChangesAsync(ct);
     return Results.Created($"/api/gear/{gear.GearId}", new GearResponse(gear.GearId, gear.FishingRod, gear.Lure));
+}
+
+static async Task<IResult> StartFishingTripAsync(
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
+{
+    // Get the authenticated user's ID from their JWT.
+    var id = GetUserId(principal);
+
+    if (id is null)
+        return Results.Unauthorized();
+
+    // Make sure the user still exists.
+    if (!await UserExistsAsync(id.Value, db, ct))
+        return Results.Unauthorized();
+
+    // Check whether this user already has an active fishing trip.
+    var activeTrip = await db.FishingTrips
+        .AnyAsync(trip =>
+            trip.UserId == id.Value &&
+            trip.EndTime == null,
+            ct);
+
+    if (activeTrip)
+    {
+        return Results.Conflict(new
+        {
+            message = "You already have an active fishing trip."
+        });
+    }
+
+    // Create a new fishing trip.
+    var trip = new FishingTrip
+    {
+        UserId = id.Value,
+        StartTime = DateTimeOffset.UtcNow,
+        EndTime = null
+    };
+
+    // Save the trip to the database.
+    db.FishingTrips.Add(trip);
+
+    await db.SaveChangesAsync(ct);
+
+    // Return the newly created trip.
+    return Results.Created(
+        $"/api/trips/{trip.FishingTripId}",
+        new
+        {
+            trip.FishingTripId,
+            trip.StartTime,
+            trip.EndTime
+        }
+    );
 }
 
 static Dictionary<string, string[]> ValidateRegistration(RegisterRequest request, out string? username, out string? email)
