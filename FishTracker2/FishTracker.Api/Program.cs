@@ -102,6 +102,7 @@ privateApi.MapPost("/gear", CreateGearAsync);
 
 privateApi.MapPost("/trips/start", StartFishingTripAsync);
 privateApi.MapGet("/trips/current", GetCurrentFishingTripAsync);
+privateApi.MapPost("/trips/end", EndFishingTripAsync);
 
 app.Run();
 
@@ -433,6 +434,51 @@ static async Task<IResult> GetCurrentFishingTripAsync(
         return Results.NoContent();
 
     return Results.Ok(activeTrip);
+}
+
+static async Task<IResult> EndFishingTripAsync(
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
+{
+    var id = GetUserId(principal);
+
+    if (id is null)
+        return Results.Unauthorized();
+
+    if (!await UserExistsAsync(id.Value, db, ct))
+        return Results.Unauthorized();
+
+    // Find the user's active fishing trip.
+    var trip = await db.FishingTrips
+        .FirstOrDefaultAsync(
+            trip => trip.UserId == id.Value &&
+                    trip.EndTime == null,
+            ct);
+
+    if (trip is null)
+    {
+        return Results.Conflict(new
+        {
+            message = "You do not have an active fishing trip."
+        });
+    }
+
+    // End the trip.
+    trip.EndTime = DateTimeOffset.UtcNow;
+
+    await db.SaveChangesAsync(ct);
+
+    // Calculate how long the trip lasted.
+    var duration = trip.EndTime.Value - trip.StartTime;
+
+    return Results.Ok(new
+    {
+        trip.FishingTripId,
+        trip.StartTime,
+        trip.EndTime,
+        durationMinutes = duration.TotalMinutes
+    });
 }
 
 static Dictionary<string, string[]> ValidateRegistration(RegisterRequest request, out string? username, out string? email)
