@@ -119,28 +119,54 @@ static async Task<IResult> GetCurrentUserStatsAsync(
     if (!await UserExistsAsync(id.Value, db, ct))
         return Results.Unauthorized();
 
+    // -------------------------
+    // Fish statistics
+    // -------------------------
+
     var userFish = db.Fish
         .AsNoTracking()
         .Where(f => f.UserId == id.Value);
 
     var fishCaught = await userFish.CountAsync(ct);
 
-    if (fishCaught == 0)
+    decimal heaviestFish = 0m;
+    decimal longestFish = 0m;
+    decimal avgWeight = 0m;
+    decimal avgLength = 0m;
+
+    if (fishCaught > 0)
     {
-        return Results.Ok(new
-        {
-            fishCaught = 0,
-            heaviestFish = 0m,
-            longestFish = 0m,
-            avgWeight = 0m,
-            avgLength = 0m
-        });
+        heaviestFish = await userFish.MaxAsync(f => f.Weight, ct);
+        longestFish = await userFish.MaxAsync(f => f.Length, ct);
+        avgWeight = await userFish.AverageAsync(f => f.Weight, ct);
+        avgLength = await userFish.AverageAsync(f => f.Length, ct);
     }
 
-    var heaviestFish = await userFish.MaxAsync(f => f.Weight, ct);
-    var longestFish = await userFish.MaxAsync(f => f.Length, ct);
-    var avgWeight = await userFish.AverageAsync(f => f.Weight, ct);
-    var avgLength = await userFish.AverageAsync(f => f.Length, ct);
+    // -------------------------
+    // Fishing trip statistics
+    // -------------------------
+
+    var completedTrips = await db.FishingTrips
+        .AsNoTracking()
+        .Where(trip =>
+            trip.UserId == id.Value &&
+            trip.EndTime != null)
+        .Select(trip => new
+        {
+            trip.StartTime,
+            trip.EndTime
+        })
+        .ToListAsync(ct);
+
+    var totalTrips = completedTrips.Count;
+
+    var totalFishingMinutes = completedTrips.Sum(
+        trip => (trip.EndTime!.Value - trip.StartTime).TotalMinutes
+    );
+
+    // -------------------------
+    // Return all statistics
+    // -------------------------
 
     return Results.Ok(new
     {
@@ -148,7 +174,9 @@ static async Task<IResult> GetCurrentUserStatsAsync(
         heaviestFish,
         longestFish,
         avgWeight,
-        avgLength
+        avgLength,
+        totalTrips,
+        totalFishingMinutes
     });
 }
 
