@@ -121,7 +121,8 @@ function Home() {
 
     const {
         token,
-        statsRefresh
+        statsRefresh,
+        refreshStats
     } = useAuth()
 
 
@@ -164,6 +165,39 @@ function Home() {
     const [
         fishError,
         setFishError
+    ] = useState('')
+
+
+    /*
+        Fishing trip state.
+    */
+    const [
+        activeTrip,
+        setActiveTrip
+    ] = useState(null)
+
+
+    const [
+        tripLoading,
+        setTripLoading
+    ] = useState(true)
+
+
+    const [
+        tripActionLoading,
+        setTripActionLoading
+    ] = useState(false)
+
+
+    const [
+        showTripConfirm,
+        setShowTripConfirm
+    ] = useState(false)
+
+
+    const [
+        tripError,
+        setTripError
     ] = useState('')
 
 
@@ -235,7 +269,6 @@ function Home() {
 
                         counts[species] =
                             (counts[species] || 0) + 1
-
                     }
                 )
 
@@ -313,6 +346,109 @@ function Home() {
         token,
         statsRefresh
     ])
+
+
+    /*
+        Check whether the current user already
+        has an active fishing trip.
+
+        This allows the trip state to survive
+        refreshing the page.
+    */
+    useEffect(() => {
+
+        if (!token) {
+
+            setActiveTrip(null)
+            setTripLoading(false)
+
+            return
+        }
+
+
+        const loadCurrentTrip = async () => {
+
+            setTripLoading(true)
+            setTripError('')
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        '/api/trips/current',
+                        {
+                            headers: {
+                                Authorization:
+                                    `Bearer ${token}`
+                            }
+                        }
+                    )
+
+
+                /*
+                    204 means the user does not
+                    currently have an active trip.
+                */
+                if (response.status === 204) {
+
+                    setActiveTrip(null)
+
+                    return
+                }
+
+
+                if (!response.ok) {
+
+                    const errorText =
+                        await response.text()
+
+                    console.error(
+                        'GET /api/trips/current failed:',
+                        response.status,
+                        errorText
+                    )
+
+                    throw new Error(
+                        `Unable to load fishing trip. Status: ${response.status}`
+                    )
+                }
+
+
+                const trip =
+                    await response.json()
+
+
+                setActiveTrip(
+                    trip
+                )
+
+            }
+            catch (error) {
+
+                console.error(
+                    'Trip loading error:',
+                    error
+                )
+
+                setTripError(
+                    error.message
+                )
+
+            }
+            finally {
+
+                setTripLoading(
+                    false
+                )
+
+            }
+        }
+
+
+        loadCurrentTrip()
+
+    }, [token])
 
 
     /*
@@ -427,6 +563,183 @@ function Home() {
         setShowAquariumMenu(
             false
         )
+    }
+
+
+    /*
+        Open the fishing trip confirmation popup.
+    */
+    const openTripConfirmation = () => {
+
+        setTripError('')
+
+        setShowTripConfirm(
+            true
+        )
+    }
+
+
+    /*
+        Close the fishing trip confirmation popup.
+    */
+    const closeTripConfirmation = () => {
+
+        if (tripActionLoading) {
+            return
+        }
+
+        setShowTripConfirm(
+            false
+        )
+    }
+
+
+    /*
+        Start or stop a fishing trip depending
+        on whether the user currently has an
+        active trip.
+    */
+    const handleTripAction = async () => {
+
+        if (
+            !token ||
+            tripActionLoading
+        ) {
+            return
+        }
+
+
+        setTripActionLoading(true)
+        setTripError('')
+
+
+        try {
+
+            const isStopping =
+                Boolean(activeTrip)
+
+
+            const endpoint =
+                isStopping
+                    ? '/api/trips/end'
+                    : '/api/trips/start'
+
+
+            const response =
+                await fetch(
+                    endpoint,
+                    {
+                        method: 'POST',
+                        headers: {
+                            Authorization:
+                                `Bearer ${token}`
+                        }
+                    }
+                )
+
+
+            if (!response.ok) {
+
+                let message =
+                    isStopping
+                        ? 'Unable to stop fishing trip.'
+                        : 'Unable to start fishing trip.'
+
+
+                try {
+
+                    const data =
+                        await response.json()
+
+
+                    if (data.message) {
+
+                        message =
+                            data.message
+                    }
+
+                }
+                catch {
+
+                    /*
+                        Keep the default error message
+                        if the response is not JSON.
+                    */
+
+                }
+
+
+                throw new Error(
+                    message
+                )
+            }
+
+
+            const trip =
+                await response.json()
+
+
+            /*
+                If we just stopped the trip,
+                there is no longer an active trip.
+
+                If we just started one, save the
+                returned trip as the active trip.
+            */
+            if (isStopping) {
+
+                setActiveTrip(
+                    null
+                )
+
+            }
+            else {
+
+                setActiveTrip(
+                    trip
+                )
+
+            }
+
+
+            setShowTripConfirm(
+                false
+            )
+
+
+            /*
+                Ending a trip changes the user's
+                trip statistics, so refresh Stats.
+            */
+            if (
+                isStopping &&
+                refreshStats
+            ) {
+
+                refreshStats()
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(
+                'Fishing trip error:',
+                error
+            )
+
+            setTripError(
+                error.message
+            )
+
+        }
+        finally {
+
+            setTripActionLoading(
+                false
+            )
+
+        }
     }
 
 
@@ -572,8 +885,51 @@ function Home() {
             <section className="bottom">
 
                 <div className="description">
-                    Ready to begin your fishing journey?
+
+                    {activeTrip
+                        ? 'Your fishing trip is in progress.'
+                        : 'Ready to begin your fishing journey?'}
+
                 </div>
+
+
+                <button
+                    type="button"
+                    className={
+                        `fishing-trip-button ${
+                            activeTrip
+                                ? 'fishing-trip-button-stop'
+                                : 'fishing-trip-button-start'
+                        }`
+                    }
+                    onClick={
+                        openTripConfirmation
+                    }
+                    disabled={
+                        tripLoading ||
+                        tripActionLoading ||
+                        !token
+                    }
+                >
+
+                    {tripLoading
+                        ? 'Loading...'
+                        : activeTrip
+                            ? 'Stop Fishing Trip'
+                            : 'Start Fishing Trip'}
+
+                </button>
+
+
+                {tripError && (
+
+                    <div className="fishing-trip-error">
+
+                        {tripError}
+
+                    </div>
+
+                )}
 
             </section>
 
@@ -834,6 +1190,104 @@ function Home() {
 
 
                             </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            )}
+
+
+            {showTripConfirm && (
+
+                <div
+                    className="trip-confirm-overlay"
+                    onClick={
+                        closeTripConfirmation
+                    }
+                >
+
+                    <div
+                        className="trip-confirm-popup"
+                        onClick={
+                            event =>
+                                event.stopPropagation()
+                        }
+                    >
+
+
+                        <div className="trip-confirm-icon">
+
+                            {activeTrip
+                                ? '🎣'
+                                : '🐟'}
+
+                        </div>
+
+
+                        <h2>
+
+                            {activeTrip
+                                ? 'Stop Fishing Trip?'
+                                : 'Start Fishing Trip?'}
+
+                        </h2>
+
+
+                        <p>
+
+                            {activeTrip
+                                ? 'Are you sure you want to end your current fishing trip?'
+                                : 'Are you ready to begin a new fishing trip?'}
+
+                        </p>
+
+
+                        <div className="trip-confirm-buttons">
+
+
+                            <button
+                                type="button"
+                                className="trip-confirm-cancel"
+                                onClick={
+                                    closeTripConfirmation
+                                }
+                                disabled={
+                                    tripActionLoading
+                                }
+                            >
+                                Cancel
+                            </button>
+
+
+                            <button
+                                type="button"
+                                className={
+                                    activeTrip
+                                        ? 'trip-confirm-stop'
+                                        : 'trip-confirm-start'
+                                }
+                                onClick={
+                                    handleTripAction
+                                }
+                                disabled={
+                                    tripActionLoading
+                                }
+                            >
+
+                                {tripActionLoading
+                                    ? activeTrip
+                                        ? 'Stopping...'
+                                        : 'Starting...'
+                                    : activeTrip
+                                        ? 'Stop Trip'
+                                        : 'Start Trip'}
+
+                            </button>
 
 
                         </div>

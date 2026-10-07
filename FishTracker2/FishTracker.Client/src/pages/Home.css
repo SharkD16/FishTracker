@@ -64,7 +64,6 @@
     padding: 20px;
 }
 
-
 .home-header h1 {
     margin: 0;
 
@@ -102,7 +101,6 @@
 
     padding: 5px;
 }
-
 
 .aquarium-water {
     position: relative;
@@ -231,7 +229,6 @@
         box-shadow 0.2s ease;
 }
 
-
 .aquarium-add-button:hover {
     transform: scale(1.08);
 
@@ -243,7 +240,6 @@
         rgba(0, 0, 0, 0.3);
 }
 
-
 .aquarium-add-button:active {
     transform: scale(0.95);
 }
@@ -252,9 +248,6 @@
 /* ==================================================
    CUSTOMIZE AQUARIUM MODAL
    ================================================== */
-
-
-/* ---------------- OVERLAY ---------------- */
 
 .aquarium-modal-overlay {
     position: fixed;
@@ -276,26 +269,15 @@
     backdrop-filter: blur(4px);
 }
 
-
-/* ---------------- MODAL CONTAINER ---------------- */
-
 .aquarium-modal {
     width: 100%;
     max-width: 410px;
 
-    /*
-        Prevent the popup from extending beyond
-        the top or bottom of the browser.
-    */
     max-height: calc(100vh - 40px);
 
     display: flex;
     flex-direction: column;
 
-    /*
-        The modal itself never scrolls.
-        Only .aquarium-modal-content scrolls.
-    */
     overflow: hidden;
 
     box-sizing: border-box;
@@ -337,11 +319,6 @@
 
     box-sizing: border-box;
 
-    /*
-        Opaque background prevents fish rows
-        from appearing through the header
-        while scrolling.
-    */
     background: linear-gradient(
         180deg,
         #e2f1f8 0%,
@@ -350,7 +327,6 @@
 
     color: #0b2545;
 }
-
 
 .aquarium-modal-header h2 {
     margin: 0 0 5px;
@@ -362,7 +338,6 @@
         Times,
         serif;
 }
-
 
 .aquarium-modal-header p {
     margin: 0;
@@ -409,23 +384,10 @@
 
     z-index: 1;
 
-    /*
-        This allows this section to take the
-        remaining space between the header
-        and footer.
-    */
     flex: 1 1 auto;
 
-    /*
-        IMPORTANT:
-        Without min-height: 0, a flex child
-        can refuse to shrink and get clipped.
-    */
     min-height: 0;
 
-    /*
-        ONLY this section scrolls.
-    */
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -450,18 +412,13 @@
     overscroll-behavior: contain;
 }
 
-
-/* Chrome / Safari scrollbar */
-
 .aquarium-modal-content::-webkit-scrollbar {
     width: 6px;
 }
 
-
 .aquarium-modal-content::-webkit-scrollbar-track {
     background: transparent;
 }
-
 
 .aquarium-modal-content::-webkit-scrollbar-thumb {
     background:
@@ -500,7 +457,6 @@
         rgba(255, 255, 255, 0.08);
 }
 
-
 .aquarium-species-row:last-child {
     margin-bottom: 0;
 }
@@ -517,7 +473,6 @@
     gap: 12px;
 }
 
-
 .aquarium-species-image-wrapper {
     width: 58px;
     height: 42px;
@@ -528,7 +483,6 @@
     justify-content: center;
     align-items: center;
 }
-
 
 .aquarium-species-image {
     display: block;
@@ -548,7 +502,6 @@
         );
 }
 
-
 .aquarium-species-text {
     min-width: 0;
 
@@ -558,14 +511,12 @@
     gap: 3px;
 }
 
-
 .aquarium-species-name {
     color: white;
 
     font-size: 15px;
     font-weight: 600;
 }
-
 
 .aquarium-species-caught {
     color: #9eeaea;
@@ -614,11 +565,9 @@
     color: white;
 }
 
-
 .aquarium-error {
     color: #ffd5d5;
 }
-
 
 .aquarium-empty {
     padding:
@@ -631,13 +580,11 @@
     color: white;
 }
 
-
 .aquarium-empty-icon {
     margin-bottom: 10px;
 
     font-size: 42px;
 }
-
 
 .aquarium-empty h3 {
     margin:
@@ -647,7 +594,6 @@
 
     font-size: 18px;
 }
-
 
 .aquarium-empty p {
     margin: 0;
@@ -680,10 +626,6 @@
         1px solid
         rgba(100, 223, 223, 0.25);
 
-    /*
-        Opaque background prevents rows from
-        appearing behind the footer.
-    */
     background: #042336;
 }
 
@@ -700,13 +642,11 @@
     text-align: right;
 }
 
-
 .aquarium-total strong {
     color: #64dfdf;
 
     font-size: 18px;
 }
-
 
 .aquarium-total-full strong {
     color: #f4a261;
@@ -720,7 +660,6 @@
 
     gap: 10px;
 }
-
 
 .aquarium-cancel-button,
 .aquarium-save-button {
@@ -737,7 +676,6 @@
     cursor: pointer;
 }
 
-
 .aquarium-cancel-button {
     background:
         rgba(255, 255, 255, 0.13);
@@ -749,7 +687,6 @@
         rgba(255, 255, 255, 0.2);
 }
 
-
 .aquarium-save-button {
     background: #64dfdf;
 
@@ -759,7 +696,6 @@
         0 4px 10px
         rgba(0, 0, 0, 0.2);
 }
-
 
 .aquarium-save-button:disabled {
     opacity: 0.45;
@@ -795,12 +731,10 @@
         infinite;
 }
 
-
 .bubble1 {
     left: 10%;
     animation-delay: 0s;
 }
-
 
 .bubble2 {
     left: 25%;
@@ -811,7 +745,6 @@
     animation-delay: -3s;
 }
 
-
 .bubble3 {
     left: 55%;
 
@@ -820,7 +753,6 @@
 
     animation-delay: -5s;
 }
-
 
 .bubble4 {
     left: 75%;
@@ -831,7 +763,6 @@
     animation-delay: -2s;
 }
 
-
 .bubble5 {
     left: 88%;
 
@@ -840,7 +771,6 @@
 
     animation-delay: -6s;
 }
-
 
 @keyframes bubble-rise {
 
@@ -896,20 +826,232 @@
     flex-direction: column;
     align-items: center;
 
-    padding: 5px;
-}
+    width: 100%;
 
+    padding:
+        8px
+        20px
+        24px;
+
+    box-sizing: border-box;
+}
 
 .description {
     margin:
         0
         0
-        20px
-        0;
+        12px;
 
     font-size: 15px;
 
     text-align: center;
 
     color: white;
+}
+
+
+/* ==================================================
+   FISHING TRIP BUTTON
+   ================================================== */
+
+.fishing-trip-button {
+    width: 100%;
+    max-width: 300px;
+
+    min-height: 48px;
+
+    padding:
+        12px
+        20px;
+
+    border: none;
+    border-radius: 14px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 14px
+        rgba(0, 0, 0, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.fishing-trip-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px
+        rgba(0, 0, 0, 0.3);
+}
+
+.fishing-trip-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.fishing-trip-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.fishing-trip-button-start {
+    background: #64dfdf;
+    color: #062f49;
+}
+
+.fishing-trip-button-stop {
+    background: #f4a261;
+    color: #40210c;
+}
+
+.fishing-trip-error {
+    margin-top: 10px;
+
+    color: #ffd5d5;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+/* ==================================================
+   FISHING TRIP CONFIRMATION
+   ================================================== */
+
+.trip-confirm-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1100;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background:
+        rgba(3, 20, 32, 0.68);
+
+    backdrop-filter: blur(4px);
+}
+
+.trip-confirm-popup {
+    width: 100%;
+    max-width: 350px;
+
+    padding:
+        28px
+        24px
+        24px;
+
+    box-sizing: border-box;
+
+    border:
+        2px solid
+        rgba(100, 223, 223, 0.65);
+
+    border-radius: 20px;
+
+    background: #062f49;
+
+    color: white;
+
+    text-align: center;
+
+    box-shadow:
+        0 18px 50px
+        rgba(0, 0, 0, 0.4);
+}
+
+.trip-confirm-icon {
+    margin-bottom: 10px;
+
+    font-size: 42px;
+}
+
+.trip-confirm-popup h2 {
+    margin:
+        0
+        0
+        10px;
+
+    font-family:
+        'Times New Roman',
+        Times,
+        serif;
+
+    font-size: 25px;
+
+    color: #64dfdf;
+}
+
+.trip-confirm-popup p {
+    margin:
+        0
+        0
+        22px;
+
+    color: #bce0ee;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.trip-confirm-buttons {
+    display: flex;
+
+    gap: 10px;
+}
+
+.trip-confirm-cancel,
+.trip-confirm-start,
+.trip-confirm-stop {
+    flex: 1;
+
+    min-height: 42px;
+
+    border: none;
+    border-radius: 11px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.trip-confirm-cancel {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.2);
+
+    background:
+        rgba(255, 255, 255, 0.13);
+
+    color: white;
+}
+
+.trip-confirm-start {
+    background: #64dfdf;
+    color: #062f49;
+}
+
+.trip-confirm-stop {
+    background: #f4a261;
+    color: #40210c;
+}
+
+.trip-confirm-cancel:disabled,
+.trip-confirm-start:disabled,
+.trip-confirm-stop:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
