@@ -103,6 +103,7 @@ privateApi.MapPost("/gear", CreateGearAsync);
 privateApi.MapPost("/trips/start", StartFishingTripAsync);
 privateApi.MapGet("/trips/current", GetCurrentFishingTripAsync);
 privateApi.MapPost("/trips/end", EndFishingTripAsync);
+privateApi.MapGet("/trips", GetFishingTripsAsync);
 
 app.Run();
 
@@ -508,6 +509,53 @@ static async Task<IResult> EndFishingTripAsync(
         durationMinutes = duration.TotalMinutes
     });
 }
+
+static async Task<IResult> GetFishingTripsAsync(
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
+{
+    // Get the authenticated user's ID from their JWT.
+    var id = GetUserId(principal);
+
+    if (id is null)
+        return Results.Unauthorized();
+
+    // Make sure the user still exists.
+    if (!await UserExistsAsync(id.Value, db, ct))
+        return Results.Unauthorized();
+
+    // Retrieve all fishing trips belonging to this user.
+    var trips = await db.FishingTrips
+        .AsNoTracking()
+        .Where(trip => trip.UserId == id.Value)
+        .Select(trip => new
+        {
+            trip.FishingTripId,
+            trip.StartTime,
+            trip.EndTime
+        })
+        .ToListAsync(ct);
+
+    // Sort newest first and calculate durations in C#.
+    // This avoids SQLite DateTimeOffset ordering limitations.
+    var tripHistory = trips
+        .OrderByDescending(trip => trip.StartTime)
+        .Select(trip => new
+        {
+            trip.FishingTripId,
+            trip.StartTime,
+            trip.EndTime,
+
+            durationMinutes = trip.EndTime.HasValue
+                ? (double?)(trip.EndTime.Value - trip.StartTime).TotalMinutes
+                : null
+        })
+        .ToList();
+
+    return Results.Ok(tripHistory);
+}
+
 
 static Dictionary<string, string[]> ValidateRegistration(RegisterRequest request, out string? username, out string? email)
 {
