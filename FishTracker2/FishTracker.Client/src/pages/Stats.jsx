@@ -1,3 +1,4 @@
+
 import './Stats.css'
 import fishweight from '../assets/fishweight.png'
 import fishRuler from '../assets/fishRuler.png'
@@ -5,217 +6,279 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 
 function Stats() {
-const { token, statsRefresh } = useAuth()
+    const { token, statsRefresh } = useAuth()
 
-const [statsData, setStatsData] = useState(null)
-const [loading, setLoading] = useState(true)
+    const [statsData, setStatsData] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
 
-useEffect(() => {
-    if (!token) return
-
-    setLoading(true)
-
-    fetch('/api/users/me/stats', {
-        headers: {
-            Authorization: `Bearer ${token}`
+    useEffect(() => {
+        if (!token) {
+            setStatsData(null)
+            setLoading(false)
+            return
         }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load stats.')
-            }
 
-            return response.json()
+        const controller = new AbortController()
+
+        setLoading(true)
+        setError('')
+
+        fetch('/api/users/me/stats', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
         })
-        .then(data => {
-            setStatsData(data)
-            setLoading(false)
-        })
-        .catch(error => {
-            console.error(error)
-            setLoading(false)
-        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load stats.')
+                }
 
-}, [token, statsRefresh])
+                return response.json()
+            })
+            .then(data => {
+                setStatsData(data)
+                setLoading(false)
+            })
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    return
+                }
 
-if (!token) {
-    return <div>Please log in.</div>
-}
+                console.error(error)
+                setError(error.message)
+                setLoading(false)
+            })
 
-if (loading || !statsData) {
-    return <div>Loading...</div>
-}
+        return () => controller.abort()
 
-const maxPossibleLength = statsData.longestFish
-const maxPossibleWeight = statsData.heaviestFish
+    }, [token, statsRefresh])
 
-const clamp = (value, min, max) =>
-    Math.min(Math.max(value, min), max)
 
-const RULER_START = 22
-const RULER_END = 96
+    /*
+        Convert total fishing minutes into
+        a readable hours/minutes format.
+    */
+    const formatFishingTime = (totalMinutes) => {
+        const minutes = Math.max(
+            0,
+            Math.floor(Number(totalMinutes) || 0)
+        )
 
-const WEIGHT_START = 22
-const WEIGHT_END = 96
+        const hours = Math.floor(minutes / 60)
+        const remainingMinutes = minutes % 60
 
-const mapToTrack = (value, max, start, end) => {
-    if (!max || max <= 0) return start
+        if (hours === 0) {
+            return `${remainingMinutes}m`
+        }
 
-    const ratio = clamp(value / max, 0, 1)
+        if (remainingMinutes === 0) {
+            return `${hours}h`
+        }
 
-    return start + ratio * (end - start)
-}
+        return `${hours}h ${remainingMinutes}m`
+    }
 
-const lengthAvgPosition = mapToTrack(
-    statsData.avgLength,
-    maxPossibleLength,
-    RULER_START,
-    RULER_END
-)
 
-const lengthBestPosition = mapToTrack(
-    statsData.longestFish,
-    maxPossibleLength,
-    RULER_START,
-    RULER_END
-)
+    if (!token) {
+        return <div>Please log in.</div>
+    }
 
-const weightAvgPosition = mapToTrack(
-    statsData.avgWeight,
-    maxPossibleWeight,
-    WEIGHT_START,
-    WEIGHT_END
-)
+    if (loading) {
+        return <div>Loading...</div>
+    }
 
-const weightBestPosition = mapToTrack(
-    statsData.heaviestFish,
-    maxPossibleWeight,
-    WEIGHT_START,
-    WEIGHT_END
-)
+    if (error || !statsData) {
+        return <div>{error || 'Unable to load stats.'}</div>
+    }
 
-return (
-    <main className="stats-screen">
-        <section className="surface-zone">
-            <header className="stats-header">
-                <h1>Angler Dashboard</h1>
-            </header>
 
-            <div className="activity-widgets">
-                <div className="widget">
-                    <div className="widget-icon">⏱️</div>
-                    <span className="widget-value">{0}</span>
-                    <span className="widget-label">Time Spent</span>
-                </div>
+    const maxPossibleLength = statsData.longestFish
+    const maxPossibleWeight = statsData.heaviestFish
 
-                <div className="widget">
-                    <div className="widget-icon">⛵</div>
-                    <span className="widget-value">{0}</span>
-                    <span className="widget-label">Trips</span>
-                </div>
+    const clamp = (value, min, max) =>
+        Math.min(Math.max(value, min), max)
 
-                <div className="widget">
-                    <div className="widget-icon">🐟</div>
-                    <span className="widget-value">{statsData.fishCaught}</span>
-                    <span className="widget-label">Total Caught</span>
-                </div>
-            </div>
-        </section>
+    const RULER_START = 22
+    const RULER_END = 96
 
-        <section className="deep-zone">
-            <h2 className="zone-title">Catch Analytics</h2>
+    const WEIGHT_START = 22
+    const WEIGHT_END = 96
 
-            <div className="analytic-card">
-                <div className="card-header">
-                    <h3>Length Profile</h3>
-                </div>
+    const mapToTrack = (value, max, start, end) => {
+        if (!max || max <= 0) return start
 
-                <div className="tape-container">
-                    <img src={fishRuler} alt="Tape Measure" className="ruler-img" />
+        const ratio = clamp(value / max, 0, 1)
 
-                    <div
-                        className="debug-marker start-debug"
-                        style={{ left: `${RULER_START}%` }}
-                    >
-                        <span>START</span>
-                    </div>
+        return start + ratio * (end - start)
+    }
 
-                    <div
-                        className="debug-marker end-debug"
-                        style={{ left: `${RULER_END}%` }}
-                    >
-                        <span>END</span>
-                    </div>
 
-                    <div
-                        className="ruler-marker avg-marker-length"
-                        style={{ left: `${lengthAvgPosition}%` }}
-                    >
-                        <span className="marker-text">
-                            Avg ({Number(statsData.avgLength).toFixed(2)} in)
+    const lengthAvgPosition = mapToTrack(
+        statsData.avgLength,
+        maxPossibleLength,
+        RULER_START,
+        RULER_END
+    )
+
+    const lengthBestPosition = mapToTrack(
+        statsData.longestFish,
+        maxPossibleLength,
+        RULER_START,
+        RULER_END
+    )
+
+    const weightAvgPosition = mapToTrack(
+        statsData.avgWeight,
+        maxPossibleWeight,
+        WEIGHT_START,
+        WEIGHT_END
+    )
+
+    const weightBestPosition = mapToTrack(
+        statsData.heaviestFish,
+        maxPossibleWeight,
+        WEIGHT_START,
+        WEIGHT_END
+    )
+
+
+    return (
+        <main className="stats-screen">
+            <section className="surface-zone">
+                <header className="stats-header">
+                    <h1>Angler Dashboard</h1>
+                </header>
+
+                <div className="activity-widgets">
+                    <div className="widget">
+                        <div className="widget-icon">⏱️</div>
+                        <span className="widget-value">
+                            {formatFishingTime(statsData.totalFishingMinutes)}
                         </span>
-                        <span className="marker-line"></span>
+                        <span className="widget-label">Time Spent</span>
                     </div>
 
-                    <div
-                        className="ruler-marker record-marker-length"
-                        style={{ left: `${lengthBestPosition}%` }}
-                    >
-                        <span className="marker-text">
-                            Record ({Number(statsData.longestFish).toFixed(2)} in)
+                    <div className="widget">
+                        <div className="widget-icon">⛵</div>
+                        <span className="widget-value">
+                            {statsData.totalTrips ?? 0}
                         </span>
-                        <span className="marker-line record-line"></span>
+                        <span className="widget-label">Trips</span>
+                    </div>
+
+                    <div className="widget">
+                        <div className="widget-icon">🐟</div>
+                        <span className="widget-value">
+                            {statsData.fishCaught}
+                        </span>
+                        <span className="widget-label">Total Caught</span>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div className="analytic-card">
-                <div className="card-header">
-                    <h3>Weight Profile</h3>
+            <section className="deep-zone">
+                <h2 className="zone-title">Catch Analytics</h2>
+
+                <div className="analytic-card">
+                    <div className="card-header">
+                        <h3>Length Profile</h3>
+                    </div>
+
+                    <div className="tape-container">
+                        <img
+                            src={fishRuler}
+                            alt="Tape Measure"
+                            className="ruler-img"
+                        />
+
+                        <div
+                            className="debug-marker start-debug"
+                            style={{ left: `${RULER_START}%` }}
+                        >
+                            <span>START</span>
+                        </div>
+
+                        <div
+                            className="debug-marker end-debug"
+                            style={{ left: `${RULER_END}%` }}
+                        >
+                            <span>END</span>
+                        </div>
+
+                        <div
+                            className="ruler-marker avg-marker-length"
+                            style={{ left: `${lengthAvgPosition}%` }}
+                        >
+                            <span className="marker-text">
+                                Avg ({Number(statsData.avgLength).toFixed(2)} in)
+                            </span>
+                            <span className="marker-line"></span>
+                        </div>
+
+                        <div
+                            className="ruler-marker record-marker-length"
+                            style={{ left: `${lengthBestPosition}%` }}
+                        >
+                            <span className="marker-text">
+                                Record ({Number(statsData.longestFish).toFixed(2)} in)
+                            </span>
+                            <span className="marker-line record-line"></span>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="scale-container">
-                    <img src={fishweight} alt="Weight Scale" className="scale-img" />
-
-                    <div
-                        className="debug-marker start-debug"
-                        style={{ left: `${WEIGHT_START}%` }}
-                    >
-                        <span>START</span>
+                <div className="analytic-card">
+                    <div className="card-header">
+                        <h3>Weight Profile</h3>
                     </div>
 
-                    <div
-                        className="debug-marker end-debug"
-                        style={{ left: `${WEIGHT_END}%` }}
-                    >
-                        <span>END</span>
-                    </div>
+                    <div className="scale-container">
+                        <img
+                            src={fishweight}
+                            alt="Weight Scale"
+                            className="scale-img"
+                        />
 
-                    <div
-                        className="scale-marker avg-marker-weight"
-                        style={{ left: `${weightAvgPosition}%` }}
-                    >
-                        <span className="marker-text">
-                            Avg ({Number(statsData.avgWeight).toFixed(2)} lbs)
-                        </span>
-                        <span className="marker-line"></span>
-                    </div>
+                        <div
+                            className="debug-marker start-debug"
+                            style={{ left: `${WEIGHT_START}%` }}
+                        >
+                            <span>START</span>
+                        </div>
 
-                    <div
-                        className="scale-marker record-marker-weight"
-                        style={{ left: `${weightBestPosition}%` }}
-                    >
-                        <span className="marker-text">
-                            Record ({Number(statsData.heaviestFish).toFixed(2)} lbs)
-                        </span>
-                        <span className="marker-line record-line"></span>
+                        <div
+                            className="debug-marker end-debug"
+                            style={{ left: `${WEIGHT_END}%` }}
+                        >
+                            <span>END</span>
+                        </div>
+
+                        <div
+                            className="scale-marker avg-marker-weight"
+                            style={{ left: `${weightAvgPosition}%` }}
+                        >
+                            <span className="marker-text">
+                                Avg ({Number(statsData.avgWeight).toFixed(2)} lbs)
+                            </span>
+                            <span className="marker-line"></span>
+                        </div>
+
+                        <div
+                            className="scale-marker record-marker-weight"
+                            style={{ left: `${weightBestPosition}%` }}
+                        >
+                            <span className="marker-text">
+                                Record ({Number(statsData.heaviestFish).toFixed(2)} lbs)
+                            </span>
+                            <span className="marker-line record-line"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
-)
-
+            </section>
+        </main>
+    )
 }
 
 export default Stats
