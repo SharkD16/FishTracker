@@ -1,9 +1,11 @@
+
 import { useState } from 'react'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import AddFish from './pages/AddFish'
 import Home from './pages/Home'
 import Stats from './pages/Stats'
+import Trips from './pages/Trips'
 import RemoveFish from './pages/RemoveFish'
 import Settings from './pages/Settings'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -13,52 +15,55 @@ import 'swiper/css'
 import './App.css'
 
 function App() {
-const { user } = useAuth()
-const [showRegister, setShowRegister] = useState(false)
+    const { user } = useAuth()
+    const [showRegister, setShowRegister] = useState(false)
 
-if (user === null) {
-    if (showRegister) {
+    if (user === null) {
+        if (showRegister) {
+            return (
+                <Register
+                    onBackToLogin={() => setShowRegister(false)}
+                />
+            )
+        }
+
         return (
-            <Register
-                onBackToLogin={() => setShowRegister(false)}
+            <Login
+                onRegister={() => setShowRegister(true)}
             />
         )
     }
 
     return (
-        <Login
-            onRegister={() => setShowRegister(true)}
-        />
+        <Swiper
+            initialSlide={1}
+            slidesPerView={1}
+        >
+            <SwiperSlide>
+                <AddFish />
+            </SwiperSlide>
+
+            <SwiperSlide>
+                <Home />
+            </SwiperSlide>
+
+            <SwiperSlide>
+                <Stats />
+            </SwiperSlide>
+
+            <SwiperSlide>
+                <Trips />
+            </SwiperSlide>
+
+            <SwiperSlide>
+                <RemoveFish />
+            </SwiperSlide>
+
+            <SwiperSlide>
+                <Settings />
+            </SwiperSlide>
+        </Swiper>
     )
-}
-
-return (
-    <Swiper
-        initialSlide={1}
-        slidesPerView={1}
-    >
-        <SwiperSlide>
-            <AddFish />
-        </SwiperSlide>
-
-        <SwiperSlide>
-            <Home />
-        </SwiperSlide>
-
-        <SwiperSlide>
-            <Stats />
-        </SwiperSlide>
-
-        <SwiperSlide>
-            <RemoveFish />
-        </SwiperSlide>
-        <SwiperSlide>
-            <Settings />
-        </SwiperSlide>
-
-    </Swiper>
-)
-
 }
 
 export default App
