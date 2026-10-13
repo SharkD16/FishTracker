@@ -374,7 +374,7 @@ static async Task<IResult> CreateGearAsync(CreateGearRequest request, ClaimsPrin
     if (string.IsNullOrWhiteSpace(rod) || rod.Length > 150) errors[nameof(request.FishingRod)] = ["Fishing rod is required and must be 150 characters or fewer."];
     if (string.IsNullOrWhiteSpace(lure) || lure.Length > 150) errors[nameof(request.Lure)] = ["Lure is required and must be 150 characters or fewer."];
     if (errors.Count > 0) return Results.ValidationProblem(errors);
-    var gear = new Gear { UserId = id.Value, FishingRod = rod!, Lure = lure! }; db.Gear.Add(gear); await db.SaveChangesAsync(ct);
+    var gear = new Gear {UserId = id.Value, PresetName = "My Gear", FishingRod = rod!, Lure = lure!, IsEquipped = false};
     return Results.Created($"/api/gear/{gear.GearId}", new GearResponse(gear.GearId, gear.FishingRod, gear.Lure));
 }
 

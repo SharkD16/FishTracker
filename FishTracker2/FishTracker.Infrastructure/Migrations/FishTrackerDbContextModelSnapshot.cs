@@ -42,6 +42,28 @@ namespace FishTracker.Infrastructure.Migrations
                     b.ToTable("Fish");
                 });
 
+            modelBuilder.Entity("FishTracker.Domain.FishingTrip", b =>
+                {
+                    b.Property<int>("FishingTripId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("FishingTripId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FishingTrips");
+                });
+
             modelBuilder.Entity("FishTracker.Domain.Gear", b =>
                 {
                     b.Property<int>("GearId")
@@ -53,17 +75,31 @@ namespace FishTracker.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsEquipped")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Lure")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("PresetName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("GearId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("\"IsEquipped\" = 1");
 
                     b.ToTable("Gear");
                 });
@@ -97,32 +133,21 @@ namespace FishTracker.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("fishtracker.domain.FishingTrip", b =>
-                {
-                    b.Property<int>("FishingTripId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset?>("EndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("FishingTripId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FishingTrips");
-                });
-
             modelBuilder.Entity("FishTracker.Domain.Fish", b =>
                 {
                     b.HasOne("FishTracker.Domain.User", "User")
                         .WithMany("Fish")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FishTracker.Domain.FishingTrip", b =>
+                {
+                    b.HasOne("FishTracker.Domain.User", "User")
+                        .WithMany("FishingTrips")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -141,20 +166,11 @@ namespace FishTracker.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("fishtracker.domain.FishingTrip", b =>
-                {
-                    b.HasOne("FishTracker.Domain.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("FishTracker.Domain.User", b =>
                 {
                     b.Navigation("Fish");
+
+                    b.Navigation("FishingTrips");
 
                     b.Navigation("Gear");
                 });

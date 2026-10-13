@@ -41,13 +41,31 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
         modelBuilder.Entity<Gear>(entity =>
         {
             entity.HasKey(gear => gear.GearId);
-            entity.Property(gear => gear.FishingRod).IsRequired().HasMaxLength(150);
-            entity.Property(gear => gear.Lure).IsRequired().HasMaxLength(150);
+
+            entity.Property(gear => gear.PresetName)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasDefaultValue("");
+
+            entity.Property(gear => gear.FishingRod)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(gear => gear.Lure)
+                .IsRequired()
+                .HasMaxLength(150);
+
+             entity.Property(gear => gear.IsEquipped)
+                .IsRequired()
+                .HasDefaultValue(false);
 
             entity.HasOne(gear => gear.User)
                 .WithMany(user => user.Gear)
                 .HasForeignKey(gear => gear.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(gear => gear.UserId)
+                .IsUnique()
+                .HasFilter("\"IsEquipped\" = 1");
         });
 
         modelBuilder.Entity<FishingTrip>(entity =>
