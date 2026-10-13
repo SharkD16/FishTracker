@@ -1,0 +1,360 @@
+
+/* =========================================
+   MAIN PAGE — SAME SIZE AS STATS / HOME
+   ========================================= */
+
+.trips-screen {
+    width: 100%;
+    max-width: 480px;
+    height: 90vh;
+    min-height: 0;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 24px;
+    overflow: hidden;
+
+    font-family: -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, sans-serif;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================
+   SKY / SURFACE ZONE
+   ========================================= */
+
+.trips-surface {
+    flex-shrink: 0;
+
+    background: linear-gradient(
+        180deg,
+        #e2f1f8 0%,
+        #bce0ee 100%
+    );
+
+    padding: 24px 20px 26px;
+    color: #1c3144;
+}
+
+.trips-header {
+    text-align: center;
+}
+
+.trips-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.trips-header p {
+    font-size: 0.85rem;
+    color: #5c7080;
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   SUMMARY WIDGETS
+   ========================================= */
+
+.trips-widgets {
+    display: flex;
+    gap: 12px;
+}
+
+.trips-widget {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 12px 8px;
+
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.trips-widget-icon {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+.trips-widget-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f2b46;
+}
+
+.trips-widget-label {
+    margin-top: 2px;
+
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #5c7080;
+}
+
+/* =========================================
+   DEEP WATER SECTION
+   ========================================= */
+
+.trips-deep-zone {
+    flex: 1;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 24px 20px;
+
+    background: linear-gradient(
+        180deg,
+        #1b4965 0%,
+        #0b2545 100%
+    );
+
+    color: white;
+}
+
+.trips-section-heading {
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.trips-section-heading h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #64dfdf;
+}
+
+.trips-count {
+    font-size: 0.75rem;
+    color: #bce0ee;
+}
+
+/* =========================================
+   SCROLLABLE TRIP LIST
+   ========================================= */
+
+.trips-scroll {
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 2px 5px 10px 0;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 223, 223, 0.6) transparent;
+
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+
+.trips-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.trips-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.trips-scroll::-webkit-scrollbar-thumb {
+    background: rgba(100, 223, 223, 0.6);
+    border-radius: 10px;
+}
+
+/* =========================================
+   INDIVIDUAL TRIP CARD
+   ========================================= */
+
+.trips-card {
+    margin-bottom: 12px;
+    padding: 16px;
+
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+}
+
+.trips-card:last-child {
+    margin-bottom: 0;
+}
+
+.trips-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.trips-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.trips-card-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.trips-card-title h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* =========================================
+   STATUS BADGES
+   ========================================= */
+
+.trips-status {
+    flex-shrink: 0;
+
+    padding: 4px 8px;
+
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.trips-status.completed {
+    background: rgba(100, 223, 223, 0.15);
+    border: 1px solid rgba(100, 223, 223, 0.35);
+    color: #64dfdf;
+}
+
+.trips-status.active {
+    background: rgba(244, 162, 97, 0.2);
+    border: 1px solid rgba(244, 162, 97, 0.4);
+    color: #f4a261;
+}
+
+/* =========================================
+   TRIP DETAILS
+   ========================================= */
+
+.trips-card-divider {
+    height: 1px;
+    margin: 14px 0;
+
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.trips-card-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.trips-detail {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.trips-detail-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #a6cbd6;
+}
+
+.trips-detail strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.trips-detail .trips-duration {
+    color: #f4a261;
+}
+
+/* =========================================
+   LOADING / EMPTY / ERROR
+   ========================================= */
+
+.trips-message {
+    padding: 30px 12px;
+    text-align: center;
+    color: #bce0ee;
+    font-size: 0.9rem;
+}
+
+.trips-error {
+    color: #ffd5d5;
+}
+
+.trips-empty {
+    padding: 45px 20px;
+    text-align: center;
+}
+
+.trips-empty-icon {
+    display: block;
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.trips-empty h3 {
+    font-size: 1.1rem;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.trips-empty p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #bce0ee;
+}
+
+/* =========================================
+   SMALL SCREENS
+   ========================================= */
+
+@media (max-width: 480px) {
+    .trips-surface {
+        padding: 20px 16px 22px;
+    }
+
+    .trips-deep-zone {
+        padding: 20px 16px;
+    }
+
+    .trips-card {
+        padding: 14px 12px;
+    }
+
+    .trips-card-title h3 {
+        font-size: 0.85rem;
+    }
+
+    .trips-detail strong {
+        font-size: 0.8rem;
+    }
+}

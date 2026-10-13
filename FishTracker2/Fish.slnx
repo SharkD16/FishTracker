@@ -5,4 +5,5 @@
   <Project Path="FishTracker.Domain/FishTracker.Domain.csproj" />
   <Project Path="FishTracker.Infrastructure/FishTracker.Infrastructure.csproj" />
   <Project Path="FishTracker.ServiceDefaults/Fish.ServiceDefaults.csproj" />
+  <Project Path="FishTracker.Tests/FishTracker.Tests.csproj" />
 </Solution>

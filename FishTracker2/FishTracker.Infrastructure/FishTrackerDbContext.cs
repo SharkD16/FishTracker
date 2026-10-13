@@ -10,6 +10,7 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
     public DbSet<Fish> Fish => Set<Fish>();
 
     public DbSet<Gear> Gear => Set<Gear>();
+    public DbSet<FishingTrip> FishingTrips => Set<FishingTrip>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,6 +21,7 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
             entity.HasKey(user => user.UserId);
             entity.Property(user => user.Username).IsRequired().HasMaxLength(100);
             entity.Property(user => user.Email).IsRequired().HasMaxLength(256);
+            entity.Property(user => user.PasswordHash).IsRequired().HasMaxLength(512);
             entity.HasIndex(user => user.Email).IsUnique();
         });
 
@@ -42,10 +44,25 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
             entity.Property(gear => gear.FishingRod).IsRequired().HasMaxLength(150);
             entity.Property(gear => gear.Lure).IsRequired().HasMaxLength(150);
 
-        entity.HasOne(gear => gear.User)
-            .WithMany(user => user.Gear)
-            .HasForeignKey(gear => gear.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(gear => gear.User)
+                .WithMany(user => user.Gear)
+                .HasForeignKey(gear => gear.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<FishingTrip>(entity =>
+        {
+            entity.HasKey(trip => trip.FishingTripId);
+
+            entity.Property(trip => trip.StartTime)
+                .IsRequired();
+
+            entity.Property(trip => trip.EndTime);
+
+            entity.HasOne(trip => trip.User)
+                .WithMany(user => user.FishingTrips)
+                .HasForeignKey(trip => trip.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
