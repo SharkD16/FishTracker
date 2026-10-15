@@ -99,6 +99,8 @@ privateApi.MapDelete("/fish/{fishId:int}", DeleteFishAsync);
 
 privateApi.MapGet("/gear", GetGearAsync);
 privateApi.MapPost("/gear", CreateGearAsync);
+privateApi.MapPatch("/gear/{gearId:int}/equip", EquipGearAsync);
+privateApi.MapDelete("/gear/{gearId:int}", DeleteGearAsync);
 
 privateApi.MapPost("/trips/start", StartFishingTripAsync);
 privateApi.MapGet("/trips/current", GetCurrentFishingTripAsync);
@@ -360,22 +362,154 @@ static async Task<IResult> DeleteFishAsync(int fishId, ClaimsPrincipal principal
     return await db.Fish.Where(f => f.FishId == fishId && f.UserId == id).ExecuteDeleteAsync(ct) == 0 ? Results.NotFound() : Results.NoContent();
 }
 
-static async Task<IResult> GetGearAsync(ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+static async Task<IResult> GetGearAsync(
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
 {
-    var id = GetUserId(principal); if (id is null) return Results.Unauthorized();
-    if (!await UserExistsAsync(id.Value, db, ct)) return Results.Unauthorized();
-    return Results.Ok(await db.Gear.AsNoTracking().Where(g => g.UserId == id).OrderByDescending(g => g.GearId).Select(g => new GearResponse(g.GearId, g.FishingRod, g.Lure)).ToListAsync(ct));
+    var id = GetUserId(principal);
+    if (id is null) return Results.Unauthorized();
+
+    if (!await UserExistsAsync(id.Value, db, ct))
+        return Results.Unauthorized();
+
+    var presets = await db.Gear
+        .AsNoTracking()
+        .Where(g => g.UserId == id.Value)
+        .OrderByDescending(g => g.GearId)
+        .Select(g => new GearResponse(
+            g.GearId,
+            g.PresetName,
+            g.FishingRod,
+            g.Lure,
+            g.IsEquipped
+        ))
+        .ToListAsync(ct);
+
+    return Results.Ok(presets);
 }
 
-static async Task<IResult> CreateGearAsync(CreateGearRequest request, ClaimsPrincipal principal, FishTrackerDbContext db, CancellationToken ct)
+static async Task<IResult> CreateGearAsync(
+    CreateGearRequest request,
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
 {
-    var id = GetUserId(principal); if (id is null) return Results.Unauthorized(); var rod = request.FishingRod?.Trim(); var lure = request.Lure?.Trim(); var errors = new Dictionary<string, string[]>();
-    if (!await UserExistsAsync(id.Value, db, ct)) return Results.Unauthorized();
-    if (string.IsNullOrWhiteSpace(rod) || rod.Length > 150) errors[nameof(request.FishingRod)] = ["Fishing rod is required and must be 150 characters or fewer."];
-    if (string.IsNullOrWhiteSpace(lure) || lure.Length > 150) errors[nameof(request.Lure)] = ["Lure is required and must be 150 characters or fewer."];
-    if (errors.Count > 0) return Results.ValidationProblem(errors);
-    var gear = new Gear { UserId = id.Value, FishingRod = rod!, Lure = lure! }; db.Gear.Add(gear); await db.SaveChangesAsync(ct);
-    return Results.Created($"/api/gear/{gear.GearId}", new GearResponse(gear.GearId, gear.FishingRod, gear.Lure));
+    var id = GetUserId(principal);
+    if (id is null) return Results.Unauthorized();
+
+    if (!await UserExistsAsync(id.Value, db, ct))
+        return Results.Unauthorized();
+
+    var name = request.PresetName?.Trim();
+    var rod = request.FishingRod?.Trim();
+    var lure = request.Lure?.Trim();
+
+    var errors = new Dictionary<string, string[]>();
+
+    if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
+        errors["presetName"] = ["Preset name is required and must be 100 characters or fewer."];
+
+    if (string.IsNullOrWhiteSpace(rod) || rod.Length > 150)
+        errors["fishingRod"] = ["Fishing rod is required and must be 150 characters or fewer."];
+
+    if (string.IsNullOrWhiteSpace(lure) || lure.Length > 150)
+        errors["lure"] = ["Lure is required and must be 150 characters or fewer."];
+
+    if (errors.Count > 0)
+        return Results.ValidationProblem(errors);
+
+    var gear = new Gear
+    {
+        UserId = id.Value,
+        PresetName = name!,
+        FishingRod = rod!,
+        Lure = lure!,
+        IsEquipped = false
+    };
+
+    db.Gear.Add(gear);
+    await db.SaveChangesAsync(ct);
+
+    return Results.Created(
+        $"/api/gear/{gear.GearId}",
+        new GearResponse(
+            gear.GearId,
+            gear.PresetName,
+            gear.FishingRod,
+            gear.Lure,
+            gear.IsEquipped
+        )
+    );
+}
+
+static async Task<IResult> EquipGearAsync(
+    int gearId,
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
+{
+    var id = GetUserId(principal);
+    if (id is null) return Results.Unauthorized();
+
+    if (!await UserExistsAsync(id.Value, db, ct))
+        return Results.Unauthorized();
+
+    await using var transaction = await db.Database.BeginTransactionAsync(ct);
+
+    var gear = await db.Gear
+        .SingleOrDefaultAsync(
+            g => g.GearId == gearId && g.UserId == id.Value,
+            ct
+        );
+
+    if (gear is null)
+        return Results.NotFound();
+
+    await db.Gear
+        .Where(g => g.UserId == id.Value && g.IsEquipped)
+        .ExecuteUpdateAsync(
+            setters => setters.SetProperty(g => g.IsEquipped, false),
+            ct
+        );
+
+    gear.IsEquipped = true;
+
+    // The bulk update bypasses EF Core's change tracker.
+    // Explicitly mark the property as modified.
+    db.Entry(gear).Property(g => g.IsEquipped).IsModified = true;
+
+    await db.SaveChangesAsync(ct);
+    await transaction.CommitAsync(ct);
+
+    return Results.Ok(new GearResponse(
+        gear.GearId,
+        gear.PresetName,
+        gear.FishingRod,
+        gear.Lure,
+        gear.IsEquipped
+    ));
+}
+
+static async Task<IResult> DeleteGearAsync(
+    int gearId,
+    ClaimsPrincipal principal,
+    FishTrackerDbContext db,
+    CancellationToken ct)
+{
+    var id = GetUserId(principal);
+    if (id is null) return Results.Unauthorized();
+
+    if (!await UserExistsAsync(id.Value, db, ct))
+        return Results.Unauthorized();
+
+    var deleted = await db.Gear
+        .Where(g => g.GearId == gearId && g.UserId == id.Value)
+        .ExecuteDeleteAsync(ct);
+
+    return deleted == 0
+        ? Results.NotFound()
+        : Results.NoContent();
 }
 
 static async Task<IResult> StartFishingTripAsync(
@@ -578,8 +712,19 @@ public sealed record LoginResponse(string AccessToken, DateTimeOffset ExpiresAt)
 public sealed record CreateFishRequest(decimal Weight, decimal Length, Species Species);
 public sealed record FishResponse(int FishId, decimal Weight, decimal Length, Species Species);
 public sealed record UserResponse(int UserId, string Username, string Email);
-public sealed record CreateGearRequest(string? FishingRod, string? Lure);
-public sealed record GearResponse(int GearId, string FishingRod, string Lure);
+public sealed record CreateGearRequest(
+    string? PresetName,
+    string? FishingRod,
+    string? Lure
+);
+
+public sealed record GearResponse(
+    int GearId,
+    string PresetName,
+    string FishingRod,
+    string Lure,
+    bool IsEquipped
+);
 
 public sealed class DatabaseHealthCheck(FishTrackerDbContext db) : Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheck
 {

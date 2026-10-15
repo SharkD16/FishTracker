@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -6,6 +5,7 @@ import AddFish from './pages/AddFish'
 import Home from './pages/Home'
 import Stats from './pages/Stats'
 import Trips from './pages/Trips'
+import Gear from './pages/Gear'
 import RemoveFish from './pages/RemoveFish'
 import Settings from './pages/Settings'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -20,48 +20,21 @@ function App() {
 
     if (user === null) {
         if (showRegister) {
-            return (
-                <Register
-                    onBackToLogin={() => setShowRegister(false)}
-                />
-            )
+            return <Register onBackToLogin={() => setShowRegister(false)} />
         }
 
-        return (
-            <Login
-                onRegister={() => setShowRegister(true)}
-            />
-        )
+        return <Login onRegister={() => setShowRegister(true)} />
     }
 
     return (
-        <Swiper
-            initialSlide={1}
-            slidesPerView={1}
-        >
-            <SwiperSlide>
-                <AddFish />
-            </SwiperSlide>
-
-            <SwiperSlide>
-                <Home />
-            </SwiperSlide>
-
-            <SwiperSlide>
-                <Stats />
-            </SwiperSlide>
-
-            <SwiperSlide>
-                <Trips />
-            </SwiperSlide>
-
-            <SwiperSlide>
-                <RemoveFish />
-            </SwiperSlide>
-
-            <SwiperSlide>
-                <Settings />
-            </SwiperSlide>
+        <Swiper initialSlide={1} slidesPerView={1}>
+            <SwiperSlide><AddFish /></SwiperSlide>
+            <SwiperSlide><Home /></SwiperSlide>
+            <SwiperSlide><Stats /></SwiperSlide>
+            <SwiperSlide><Trips /></SwiperSlide>
+            <SwiperSlide><Gear /></SwiperSlide>
+            <SwiperSlide><RemoveFish /></SwiperSlide>
+            <SwiperSlide><Settings /></SwiperSlide>
         </Swiper>
     )
 }
