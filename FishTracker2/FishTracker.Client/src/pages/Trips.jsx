@@ -87,7 +87,9 @@ function Trips() {
         return () => controller.abort()
     }, [token, statsRefresh])
 
-    const completedTrips = trips.filter(trip => trip.endTime !== null)
+    const completedTrips = trips.filter(
+        trip => trip.endTime !== null
+    )
 
     const totalMinutes = completedTrips.reduce(
         (sum, trip) => sum + (trip.durationMinutes ?? 0),
@@ -161,65 +163,113 @@ function Trips() {
                         </div>
                     )}
 
-                    {!loading && !error && trips.map((trip) => (
-                        <div
-                            className="trips-card"
-                            key={trip.fishingTripId}
-                        >
-                            <div className="trips-card-header">
-                                <div className="trips-card-title">
-                                    <span className="trips-card-icon">🎣</span>
-                                    <h3>{formatDate(trip.startTime)}</h3>
-                                </div>
+                    {!loading && !error && trips.map((trip) => {
+                        const hasGear = Boolean(
+                            trip.gearPresetName ||
+                            trip.fishingRod ||
+                            trip.lure
+                        )
 
-                                <span className={
-                                    trip.endTime
-                                        ? 'trips-status completed'
-                                        : 'trips-status active'
-                                }>
-                                    {trip.endTime
-                                        ? 'Completed'
-                                        : 'In Progress'}
-                                </span>
-                            </div>
+                        return (
+                            <div
+                                className="trips-card"
+                                key={trip.fishingTripId}
+                            >
+                                <div className="trips-card-header">
+                                    <div className="trips-card-title">
+                                        <span className="trips-card-icon">
+                                            🎣
+                                        </span>
+                                        <h3>
+                                            {formatDate(trip.startTime)}
+                                        </h3>
+                                    </div>
 
-                            <div className="trips-card-divider" />
-
-                            <div className="trips-card-details">
-                                <div className="trips-detail">
-                                    <span className="trips-detail-label">
-                                        Started
-                                    </span>
-                                    <strong>
-                                        {formatTime(trip.startTime)}
-                                    </strong>
-                                </div>
-
-                                <div className="trips-detail">
-                                    <span className="trips-detail-label">
-                                        Ended
-                                    </span>
-                                    <strong>
+                                    <span className={
+                                        trip.endTime
+                                            ? 'trips-status completed'
+                                            : 'trips-status active'
+                                    }>
                                         {trip.endTime
-                                            ? formatTime(trip.endTime)
-                                            : '—'}
-                                    </strong>
-                                </div>
-
-                                <div className="trips-detail">
-                                    <span className="trips-detail-label">
-                                        Duration
+                                            ? 'Completed'
+                                            : 'In Progress'}
                                     </span>
-                                    <strong className="trips-duration">
-                                        {formatDuration(
-                                            trip.durationMinutes
-                                        )}
-                                    </strong>
                                 </div>
-                            </div>
-                        </div>
-                    ))}
 
+                                <div className="trips-card-divider" />
+
+                                <div className="trips-card-details">
+                                    <div className="trips-detail">
+                                        <span className="trips-detail-label">
+                                            Started
+                                        </span>
+                                        <strong>
+                                            {formatTime(trip.startTime)}
+                                        </strong>
+                                    </div>
+
+                                    <div className="trips-detail">
+                                        <span className="trips-detail-label">
+                                            Ended
+                                        </span>
+                                        <strong>
+                                            {trip.endTime
+                                                ? formatTime(trip.endTime)
+                                                : '—'}
+                                        </strong>
+                                    </div>
+
+                                    <div className="trips-detail">
+                                        <span className="trips-detail-label">
+                                            Duration
+                                        </span>
+                                        <strong className="trips-duration">
+                                            {formatDuration(
+                                                trip.durationMinutes
+                                            )}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                {/* GEAR SNAPSHOT */}
+                                <div className="trips-card-divider" />
+
+                                <div className="trips-gear-heading">
+                                    <span className="trips-gear-icon">🎒</span>
+                                    <h4>Gear Used</h4>
+                                </div>
+
+                                {hasGear ? (
+                                    <div className="trips-gear-panel">
+                                        <div className="trips-gear-row">
+                                            <span>Preset</span>
+                                            <strong>
+                                                {trip.gearPresetName || '—'}
+                                            </strong>
+                                        </div>
+
+                                        <div className="trips-gear-row">
+                                            <span>Rod</span>
+                                            <strong>
+                                                {trip.fishingRod || '—'}
+                                            </strong>
+                                        </div>
+
+                                        <div className="trips-gear-row">
+                                            <span>Lure</span>
+                                            <strong>
+                                                {trip.lure || '—'}
+                                            </strong>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className="trips-no-gear">
+                                        No gear recorded for this trip.
+                                    </p>
+                                )}
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
         </div>

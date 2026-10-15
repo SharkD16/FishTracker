@@ -358,3 +358,69 @@
         font-size: 0.8rem;
     }
 }
+
+
+
+/* =========================================
+   GEAR SNAPSHOT SECTION
+   ========================================= */
+
+.trips-gear-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.trips-gear-icon {
+    font-size: 1rem;
+}
+
+.trips-gear-heading h4 {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64dfdf;
+}
+
+.trips-gear-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 14px;
+
+    background: rgba(100, 223, 223, 0.07);
+    border: 1px solid rgba(100, 223, 223, 0.16);
+    border-radius: 12px;
+}
+
+.trips-gear-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.trips-gear-row span {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: #a6cbd6;
+}
+
+.trips-gear-row strong {
+    min-width: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.trips-no-gear {
+    margin: 0;
+    padding: 8px 0 2px;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #a6cbd6;
+}
