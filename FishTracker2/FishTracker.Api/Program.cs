@@ -517,17 +517,15 @@ static async Task<IResult> StartFishingTripAsync(
     FishTrackerDbContext db,
     CancellationToken ct)
 {
-    // Get the authenticated user's ID from their JWT.
     var id = GetUserId(principal);
 
     if (id is null)
         return Results.Unauthorized();
 
-    // Make sure the user still exists.
     if (!await UserExistsAsync(id.Value, db, ct))
         return Results.Unauthorized();
 
-    // Check whether this user already has an active fishing trip.
+    // Prevent multiple active trips for the same user.
     var activeTrip = await db.FishingTrips
         .AnyAsync(trip =>
             trip.UserId == id.Value &&
@@ -542,27 +540,39 @@ static async Task<IResult> StartFishingTripAsync(
         });
     }
 
-    // Create a new fishing trip.
+    // Find the user's currently equipped gear preset.
+    var equippedGear = await db.Gear
+        .AsNoTracking()
+        .FirstOrDefaultAsync(gear =>
+            gear.UserId == id.Value &&
+            gear.IsEquipped,
+            ct);
+
+    // Save a snapshot of the gear when the trip begins.
     var trip = new FishingTrip
     {
         UserId = id.Value,
         StartTime = DateTimeOffset.UtcNow,
-        EndTime = null
+        EndTime = null,
+        GearPresetName = equippedGear?.PresetName,
+        FishingRod = equippedGear?.FishingRod,
+        Lure = equippedGear?.Lure
     };
 
-    // Save the trip to the database.
     db.FishingTrips.Add(trip);
 
     await db.SaveChangesAsync(ct);
 
-    // Return the newly created trip.
     return Results.Created(
         $"/api/trips/{trip.FishingTripId}",
         new
         {
             trip.FishingTripId,
             trip.StartTime,
-            trip.EndTime
+            trip.EndTime,
+            trip.GearPresetName,
+            trip.FishingRod,
+            trip.Lure
         }
     );
 }
@@ -589,7 +599,10 @@ static async Task<IResult> GetCurrentFishingTripAsync(
         {
             trip.FishingTripId,
             trip.StartTime,
-            trip.EndTime
+            trip.EndTime,
+            trip.GearPresetName,
+            trip.FishingRod,
+            trip.Lure
         })
         .FirstOrDefaultAsync(ct);
 
@@ -649,17 +662,14 @@ static async Task<IResult> GetFishingTripsAsync(
     FishTrackerDbContext db,
     CancellationToken ct)
 {
-    // Get the authenticated user's ID from their JWT.
     var id = GetUserId(principal);
 
     if (id is null)
         return Results.Unauthorized();
 
-    // Make sure the user still exists.
     if (!await UserExistsAsync(id.Value, db, ct))
         return Results.Unauthorized();
 
-    // Retrieve all fishing trips belonging to this user.
     var trips = await db.FishingTrips
         .AsNoTracking()
         .Where(trip => trip.UserId == id.Value)
@@ -667,12 +677,15 @@ static async Task<IResult> GetFishingTripsAsync(
         {
             trip.FishingTripId,
             trip.StartTime,
-            trip.EndTime
+            trip.EndTime,
+            trip.GearPresetName,
+            trip.FishingRod,
+            trip.Lure
         })
         .ToListAsync(ct);
 
-    // Sort newest first and calculate durations in C#.
-    // This avoids SQLite DateTimeOffset ordering limitations.
+    // Sort and calculate duration in memory because SQLite
+    // has limitations when ordering DateTimeOffset values.
     var tripHistory = trips
         .OrderByDescending(trip => trip.StartTime)
         .Select(trip => new
@@ -680,7 +693,9 @@ static async Task<IResult> GetFishingTripsAsync(
             trip.FishingTripId,
             trip.StartTime,
             trip.EndTime,
-
+            trip.GearPresetName,
+            trip.FishingRod,
+            trip.Lure,
             durationMinutes = trip.EndTime.HasValue
                 ? (double?)(trip.EndTime.Value - trip.StartTime).TotalMinutes
                 : null

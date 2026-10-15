@@ -68,6 +68,7 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
                 .HasFilter("\"IsEquipped\" = 1");
         });
 
+
         modelBuilder.Entity<FishingTrip>(entity =>
         {
             entity.HasKey(trip => trip.FishingTripId);
@@ -76,6 +77,15 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
                 .IsRequired();
 
             entity.Property(trip => trip.EndTime);
+
+            entity.Property(trip => trip.GearPresetName)
+                .HasMaxLength(100);
+
+            entity.Property(trip => trip.FishingRod)
+                .HasMaxLength(150);
+
+            entity.Property(trip => trip.Lure)
+                .HasMaxLength(150);
 
             entity.HasOne(trip => trip.User)
                 .WithMany(user => user.FishingTrips)
