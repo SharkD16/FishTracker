@@ -51,6 +51,18 @@ namespace FishTracker.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("EndTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FishingRod")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GearPresetName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Lure")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTimeOffset>("StartTime")
                         .HasColumnType("TEXT");
 
