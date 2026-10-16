@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import './Gear.css'
+import { API_BASE_URL } from '../config/api'
 
 const emptyForm = {
     presetName: '',
@@ -34,7 +35,7 @@ function Gear() {
             setError('')
 
             try {
-                const response = await fetch('/api/gear', {
+                const response = await fetch(`${API_BASE_URL}/api/gear`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
@@ -63,7 +64,7 @@ function Gear() {
     }, [token])
 
     async function refreshPresets() {
-        const response = await fetch('/api/gear', {
+        const response = await fetch(`${API_BASE_URL}/api/gear`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -95,7 +96,7 @@ function Gear() {
         setMessage('')
 
         try {
-            const response = await fetch('/api/gear', {
+            const response = await fetch(`${API_BASE_URL}/api/gear`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -132,7 +133,7 @@ function Gear() {
         setMessage('')
 
         try {
-            const response = await fetch(`/api/gear/${gearId}/equip`, {
+            const response = await fetch(`${API_BASE_URL}/api/gear/${gearId}/equip`, {
                 method: 'PATCH',
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -166,7 +167,7 @@ function Gear() {
         setMessage('')
 
         try {
-            const response = await fetch(`/api/gear/${gearId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/gear/${gearId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`

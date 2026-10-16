@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import './Trips.css'
+import { API_BASE_URL } from '../config/api'
 
 function formatDate(dateString) {
     return new Date(dateString).toLocaleDateString(undefined, {
@@ -55,7 +56,7 @@ function Trips() {
             setError('')
 
             try {
-                const response = await fetch('/api/trips', {
+                const response = await fetch(`${API_BASE_URL}/api/trips`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },

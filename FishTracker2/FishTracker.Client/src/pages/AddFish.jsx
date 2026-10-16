@@ -1,6 +1,7 @@
 import './AddFish.css'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 function AddFish() {
 
@@ -22,7 +23,7 @@ function AddFish() {
 
         try {
 
-            const response = await fetch('/api/fish', {
+            const response = await fetch(`${API_BASE_URL}/api/fish`, {
                 method: 'POST',
 
                 headers: {

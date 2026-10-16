@@ -4,6 +4,7 @@ import fishweight from '../assets/fishweight.png'
 import fishRuler from '../assets/fishRuler.png'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 function Stats() {
     const { token, statsRefresh } = useAuth()
@@ -24,7 +25,7 @@ function Stats() {
         setLoading(true)
         setError('')
 
-        fetch('/api/users/me/stats', {
+        fetch(`${API_BASE_URL}/api/users/me/stats`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

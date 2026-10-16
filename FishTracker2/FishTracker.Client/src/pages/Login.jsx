@@ -1,6 +1,7 @@
 import './Login.css'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 function Login({ onRegister }) {
 
@@ -23,7 +24,7 @@ function Login({ onRegister }) {
         try {
 
             const response = await fetch(
-                'http://localhost:5554/api/auth/login',
+                `${API_BASE_URL}/api/auth/login`,
                 {
                     method: 'POST',
 
@@ -60,7 +61,7 @@ function Login({ onRegister }) {
 
 
             const userResponse = await fetch(
-                'http://localhost:5554/api/users/me',
+                `${API_BASE_URL}/api/users/me`,
                 {
                     headers: {
                         Authorization:

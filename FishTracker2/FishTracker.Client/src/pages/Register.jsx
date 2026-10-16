@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './Register.css'
+import { API_BASE_URL } from '../config/api'
 
 function Register({ onBackToLogin }) {
 
@@ -61,7 +62,7 @@ function Register({ onBackToLogin }) {
         try {
 
             const response = await fetch(
-                'http://localhost:5554/api/users',
+                `${API_BASE_URL}/api/users`,
                 {
                     method: 'POST',
 

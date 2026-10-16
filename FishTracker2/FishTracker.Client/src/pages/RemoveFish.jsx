@@ -1,6 +1,7 @@
 import './RemoveFish.css'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 import trout from '../assets/trout.png'
 import smallmouthBass from '../assets/smallmouthBass.png'
@@ -54,7 +55,7 @@ function RemoveFish() {
 
 
                 const response = await fetch(
-                    '/api/fish',
+                    `${API_BASE_URL}/api/fish`,
                     {
                         headers: {
                             Authorization:
@@ -138,7 +139,7 @@ function RemoveFish() {
 
 
             const response = await fetch(
-                `/api/fish/${fishId}`,
+                `${API_BASE_URL}/api/fish/${fishId}`,
                 {
                     method: 'DELETE',
 
