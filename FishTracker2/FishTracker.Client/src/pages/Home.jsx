@@ -1,6 +1,7 @@
 import './Home.css'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 import trout from '../assets/trout.png'
 import smallmouthBass from '../assets/smallmouthBass.png'
@@ -227,7 +228,7 @@ function Home() {
 
                 const response =
                     await fetch(
-                        '/api/fish',
+                        `${API_BASE_URL}/api/fish`,
                         {
                             headers: {
                                 Authorization:
@@ -376,7 +377,7 @@ function Home() {
 
                 const response =
                     await fetch(
-                        '/api/trips/current',
+                        `${API_BASE_URL}/api/trips/current`,
                         {
                             headers: {
                                 Authorization:
@@ -621,8 +622,8 @@ function Home() {
 
             const endpoint =
                 isStopping
-                    ? '/api/trips/end'
-                    : '/api/trips/start'
+                    ? `${API_BASE_URL}/api/trips/end`
+                    : `${API_BASE_URL}/api/trips/start`
 
 
             const response =

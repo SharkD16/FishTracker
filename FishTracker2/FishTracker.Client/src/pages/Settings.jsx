@@ -1,6 +1,7 @@
 import './Settings.css'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 function Settings() {
     const { user, token, setUser, logout } = useAuth()
@@ -18,7 +19,7 @@ function Settings() {
         setError('')
 
         try {
-            const response = await fetch('/api/users/me/username', {
+            const response = await fetch(`${API_BASE_URL}/api/users/me/username`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ function Settings() {
         setError('')
 
         try {
-            const response = await fetch('/api/users/me/email', {
+            const response = await fetch(`${API_BASE_URL}/api/users/me/email`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,7 +86,7 @@ function Settings() {
         setError('')
 
         try {
-            const response = await fetch('/api/users/me', {
+            const response = await fetch(`${API_BASE_URL}/api/users/me`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
