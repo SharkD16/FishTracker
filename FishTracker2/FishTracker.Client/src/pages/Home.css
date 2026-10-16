@@ -7,18 +7,6 @@
     --accent-gold: #f4a261;
 }
 
-
-/* ==================================================
-   SWIPER
-   ================================================== */
-
-.swiper-slide {
-    background-color: #ddd;
-    padding-top: 20px;
-    box-sizing: border-box;
-}
-
-
 /* ==================================================
    PAGE
    ================================================== */
@@ -1054,4 +1042,159 @@
 .trip-confirm-stop:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+
+/* =========================================
+   HOME — RESPONSIVE PAGE LAYOUT
+   ========================================= */
+
+.home {
+    height: 90dvh;
+    min-height: 0;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.home-header {
+    flex-shrink: 0;
+    padding: 12px 16px;
+}
+
+.home-header h1 {
+    padding: 12px 8px;
+    font-size: clamp(26px, 5vw, 42px);
+}
+
+/* =========================================
+   RESPONSIVE AQUARIUM
+   ========================================= */
+
+.aquarium {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    padding: 8px 16px;
+}
+
+.aquarium-water {
+    width: 100%;
+    max-width: 400px;
+
+    /* Shrinks on shorter screens */
+    height: 100%;
+    max-height: 450px;
+    min-height: 0;
+
+    box-sizing: border-box;
+}
+
+/* =========================================
+   BOTTOM TRIP CONTROLS
+   ========================================= */
+
+.bottom {
+    flex-shrink: 0;
+    padding: 10px 16px 20px;
+}
+
+.description {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.fishing-trip-button {
+    min-height: 44px;
+}
+
+/* =========================================
+   MODALS
+   ========================================= */
+
+.aquarium-modal {
+    max-height: calc(100dvh - 40px);
+}
+
+.trip-confirm-popup {
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+}
+
+/* =========================================
+   MOBILE — FULL-SCREEN LAYOUT
+   ========================================= */
+
+@media (max-width: 480px) {
+    .home {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        min-height: 0;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .home-header {
+        padding: 10px 12px;
+    }
+
+    .home-header h1 {
+        font-size: clamp(26px, 7vw, 36px);
+        padding: 8px 4px;
+    }
+
+    .aquarium {
+        padding: 6px 12px;
+    }
+
+    .aquarium-water {
+        max-width: 100%;
+        border-width: 6px;
+        border-radius: 20px;
+    }
+
+    .bottom {
+        padding: 10px 16px max(16px, env(safe-area-inset-bottom));
+    }
+
+    .aquarium-add-button {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* =========================================
+   SHORT PHONE SCREENS
+   ========================================= */
+
+@media (max-height: 700px) {
+    .home-header {
+        padding: 6px 12px;
+    }
+
+    .home-header h1 {
+        padding: 4px;
+        font-size: 28px;
+    }
+
+    .aquarium {
+        padding: 4px 12px;
+    }
+
+    .bottom {
+        padding-top: 6px;
+        padding-bottom: 12px;
+    }
+
+    .description {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+
+    .fishing-trip-button {
+        min-height: 44px;
+        padding: 8px 14px;
+    }
 }

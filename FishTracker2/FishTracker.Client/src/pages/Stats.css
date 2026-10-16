@@ -1,3 +1,4 @@
+
 :root {
     --sky-bg-top: #e2f1f8;
     --sky-bg-bottom: #bce0ee;
@@ -9,30 +10,43 @@
     --card-border: rgba(255, 255, 255, 0.15);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+/* =========================================
+   MAIN STATS LAYOUT
+   ========================================= */
 
-/* Main Layout Setup */
 .stats-screen {
     width: 100%;
     max-width: 480px;
-    min-height: 90vh;
+    height: 90dvh;
+    min-height: 0;
     margin: 0 auto;
+
     display: flex;
     flex-direction: column;
+
     border-radius: 24px;
     overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    font-family: -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, sans-serif;
+
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* --- ABOVE WATER / SURFACE ZONE --- */
+/* =========================================
+   ABOVE WATER
+   ========================================= */
+
 .surface-zone {
-    background: linear-gradient(180deg, var(--sky-bg-top) 0%, var(--sky-bg-bottom) 100%);
-    padding: 24px 20px 30px 20px;
+    flex-shrink: 0;
+
+    background: linear-gradient(
+        180deg,
+        var(--sky-bg-top) 0%,
+        var(--sky-bg-bottom) 100%
+    );
+
+    padding: 24px 20px 30px;
     color: #1c3144;
 }
 
@@ -40,12 +54,15 @@
     font-size: 1.5rem;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 20px;
+    margin: 0 0 20px;
     letter-spacing: -0.5px;
-    color: black;
+    color: #0b2545;
 }
 
-/* Circular Activity Widgets */
+/* =========================================
+   ACTIVITY WIDGETS
+   ========================================= */
+
 .activity-widgets {
     display: flex;
     justify-content: space-around;
@@ -53,15 +70,22 @@
 }
 
 .widget {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 16px;
-    padding: 12px 8px;
     flex: 1;
+    min-width: 0;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+
+    padding: 12px 8px;
+
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
@@ -74,6 +98,8 @@
     font-size: 0.95rem;
     font-weight: 700;
     color: #0f2b46;
+    overflow-wrap: anywhere;
+    text-align: center;
 }
 
 .widget-label {
@@ -82,32 +108,64 @@
     letter-spacing: 0.5px;
     color: #5c7080;
     margin-top: 2px;
+    text-align: center;
 }
 
-/* --- UNDERWATER / DEEP ZONE --- */
+/* =========================================
+   UNDERWATER ANALYTICS
+   ========================================= */
+
 .deep-zone {
     flex: 1;
-    background: linear-gradient(180deg, var(--water-top) 0%, var(--water-deep) 100%);
-    padding: 24px 20px;
-    color: #ffffff;
+    min-height: 0;
+
     display: flex;
     flex-direction: column;
     gap: 16px;
+
+    background: linear-gradient(
+        180deg,
+        var(--water-top) 0%,
+        var(--water-deep) 100%
+    );
+
+    padding: 24px 20px;
+    color: #ffffff;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+
+    scrollbar-width: thin;
+    scrollbar-color: #64dfdf transparent;
 }
 
 .zone-title {
+    flex-shrink: 0;
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 0.5px;
     color: var(--accent-cyan);
-    margin-bottom: 4px;
+    margin: 0 0 4px;
 }
 
+/* =========================================
+   ANALYTIC CARDS
+   ========================================= */
+
 .analytic-card {
+    flex-shrink: 0;
+    min-width: 0;
+
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 16px;
+
     padding: 12px 16px;
+
     backdrop-filter: blur(10px);
 }
 
@@ -115,12 +173,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     margin-bottom: 2px;
 }
 
 .card-header h3 {
     font-size: 0.95rem;
     font-weight: 500;
+    color: #ffffff;
+    margin: 0;
 }
 
 .record-badge {
@@ -133,23 +194,32 @@
     font-weight: 600;
 }
 
-/* Custom Tape Measure Gauge */
-.tape-container {
+/* =========================================
+   RULER / SCALE
+   ========================================= */
+
+.tape-container,
+.scale-container {
     position: relative;
     width: 100%;
+    min-width: 0;
     margin-top: 2px;
+
     display: flex;
     align-items: center;
 }
 
-.ruler-img {
+.ruler-img,
+.scale-img {
     width: 100%;
     height: auto;
     display: block;
     object-fit: contain;
 }
 
-/* Marker positioning relative to the container */
+/* =========================================
+   MARKERS
+   ========================================= */
 
 .marker {
     position: absolute;
@@ -173,60 +243,54 @@
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
+
     font-size: 0.65rem;
     font-weight: 700;
+
     background: rgba(0, 0, 0, 0.75);
-    color: #fff;
+    color: #ffffff;
+
     padding: 2px 4px;
     border-radius: 4px;
 }
 
-/* Custom Scale Weight Profile (Image & Overlays) */
-.scale-container {
-    position: relative;
-    width: 100%;
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-}
+/* =========================================
+   RULER AND SCALE MARKERS
+   ========================================= */
 
-.scale-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain;
-}
-
-/* Marker positioning relative to the container */
 .ruler-marker,
 .scale-marker {
     position: absolute;
     top: 0;
     bottom: 0;
+
     transform: translateX(-50%);
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
+
     pointer-events: none;
     z-index: 2;
 }
 
-/* Badge overlay above the scale bar */
 .marker-text {
     font-size: 0.65rem;
     font-weight: 700;
+
     background-color: rgba(11, 25, 44, 0.9);
     color: #ffffff;
+
     padding: 3px 6px;
     border-radius: 4px;
     white-space: nowrap;
     margin-bottom: 2px;
+
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Indicator lines pointing to the ruler ticks */
 .marker-line {
     width: 2px;
     height: 90px;
@@ -237,13 +301,16 @@
     background-color: var(--accent-gold);
 }
 
+/* =========================================
+   DEBUG MARKERS
+   ========================================= */
+
 .debug-marker {
     position: absolute;
     top: 0;
     bottom: 0;
 
     width: 2px;
-
     transform: translateX(-50%);
 
     z-index: 10;
@@ -261,7 +328,6 @@
 .debug-marker span {
     position: absolute;
     top: -18px;
-
     left: 50%;
     transform: translateX(-50%);
 
@@ -273,4 +339,91 @@
 
     padding: 2px 4px;
     border-radius: 3px;
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 480px) {
+    .stats-screen {
+        max-width: none;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .surface-zone {
+        padding: 20px 14px 22px;
+    }
+
+    .stats-header h1 {
+        font-size: 1.4rem;
+        margin-bottom: 16px;
+    }
+
+    .activity-widgets {
+        gap: 8px;
+    }
+
+    .widget {
+        padding: 12px 5px;
+        border-radius: 12px;
+    }
+
+    .widget-value {
+        font-size: 0.9rem;
+    }
+
+    .widget-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.2px;
+    }
+
+    .deep-zone {
+        padding: 20px 14px;
+        gap: 14px;
+    }
+
+    .analytic-card {
+        padding: 12px 10px;
+    }
+
+    .marker-text {
+        font-size: 0.55rem;
+        padding: 2px 4px;
+    }
+}
+
+/* =========================================
+   SMALL / SHORT PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+    .activity-widgets {
+        gap: 6px;
+    }
+
+    .widget-icon {
+        font-size: 1.2rem;
+    }
+
+    .widget-label {
+        font-size: 0.58rem;
+    }
+}
+
+@media (max-height: 700px) {
+    .surface-zone {
+        padding-top: 14px;
+        padding-bottom: 16px;
+    }
+
+    .stats-header h1 {
+        margin-bottom: 12px;
+    }
+
+    .deep-zone {
+        padding-top: 16px;
+    }
 }

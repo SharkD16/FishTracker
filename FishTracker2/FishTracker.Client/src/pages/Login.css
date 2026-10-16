@@ -404,3 +404,135 @@
         padding-top: 36px;
     }
 }
+
+
+/* =========================================
+   RESPONSIVE LOGIN
+   ========================================= */
+
+.login {
+    max-height: 100dvh;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+
+.login-form-group {
+    min-width: 0;
+}
+
+.login-form-group input {
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+}
+
+.login-button,
+.signup-btn {
+    min-height: 44px;
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 480px) {
+
+    .login {
+        width: 100%;
+        max-width: none;
+
+        height: 100%;
+        min-height: 0;
+        max-height: none;
+
+        margin: 0;
+
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .login-header {
+        padding: 36px 20px 30px;
+        flex-shrink: 0;
+    }
+
+    .login-header h1 {
+        font-size: 28px;
+    }
+
+    .login-header p {
+        font-size: 14px;
+    }
+
+    .login-body {
+        padding: 30px 20px 28px;
+        min-height: 0;
+    }
+
+    .login-form {
+        gap: 20px;
+    }
+
+    /* Stack labels above inputs */
+
+    .login-form-group {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 8px;
+    }
+
+    .login-form-group label {
+        font-size: 14px;
+    }
+
+    .login-form-group input {
+        width: 100%;
+        min-height: 44px;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .login-button {
+        padding: 13px;
+        font-size: 16px;
+    }
+
+    .signup-section {
+        padding-top: 32px;
+    }
+
+    .signup-btn {
+        padding: 13px;
+        font-size: 15px;
+    }
+}
+
+/* =========================================
+   SHORT SCREENS
+   ========================================= */
+
+@media (max-height: 700px) {
+
+    .login-header {
+        padding-top: 24px;
+        padding-bottom: 22px;
+    }
+
+    .login-body {
+        padding-top: 22px;
+        padding-bottom: 20px;
+    }
+
+    .login-form {
+        gap: 16px;
+    }
+
+    .signup-section {
+        padding-top: 24px;
+    }
+}

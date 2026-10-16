@@ -450,3 +450,130 @@
         left: -50px;
     }
 }
+
+
+/* =========================================
+   RESPONSIVE ADD FISH LAYOUT
+   ========================================= */
+
+.add-fish {
+    max-height: calc(100dvh - 32px);
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+
+.fish-form {
+    width: 100%;
+    min-width: 0;
+}
+
+.form-group {
+    min-width: 0;
+}
+
+.input-with-unit input {
+    min-width: 0;
+}
+
+.add-fish-button {
+    min-height: 44px;
+    flex-shrink: 0;
+}
+
+/* Prevent automatic zoom on iOS when focusing inputs */
+
+.form-group input,
+.form-group select {
+    min-height: 44px;
+    font-size: 16px;
+}
+
+/* Keep success popup inside the viewport */
+
+.fish-success-popup {
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+}
+
+/* =========================================
+   MOBILE — FULL-SCREEN
+   ========================================= */
+
+@media (max-width: 480px) {
+    .add-fish {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        max-height: none;
+        min-height: 0;
+
+        margin: 0;
+        padding: 28px 20px;
+
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .add-fish-header {
+        margin-bottom: 24px;
+    }
+
+    .add-fish-header h1 {
+        font-size: 28px;
+    }
+
+    .add-fish-header p {
+        font-size: 14px;
+    }
+
+    .fish-form {
+        gap: 18px;
+    }
+
+    .form-group {
+        gap: 8px;
+    }
+
+    .add-fish-button {
+        margin-top: 10px;
+        padding: 14px;
+    }
+
+    .fish-success-overlay {
+        padding: 16px;
+    }
+
+    .fish-success-popup {
+        max-width: 100%;
+        padding: 26px 20px;
+    }
+}
+
+/* =========================================
+   SMALL / SHORT PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+    .add-fish {
+        padding: 20px 16px;
+    }
+
+    .fish-form {
+        gap: 14px;
+    }
+}
+
+@media (max-height: 700px) {
+    .add-fish-header {
+        margin-bottom: 14px;
+    }
+
+    .fish-form {
+        gap: 12px;
+    }
+}

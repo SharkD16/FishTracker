@@ -424,3 +424,128 @@
     font-style: italic;
     color: #a6cbd6;
 }
+
+
+/* =========================================
+   RESPONSIVE TRIPS LAYOUT
+   ========================================= */
+
+.trips-screen {
+    height: 90dvh;
+    min-height: 0;
+}
+
+.trips-widget {
+    min-width: 0;
+}
+
+.trips-widget-value {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+
+.trips-widget-label {
+    text-align: center;
+}
+
+/* Prevent trip details from overflowing */
+
+.trips-card-title h3 {
+    overflow-wrap: anywhere;
+}
+
+.trips-detail strong {
+    overflow-wrap: anywhere;
+}
+
+/* Long gear names should wrap */
+
+.trips-gear-row strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   MOBILE — FULL-SCREEN
+   ========================================= */
+
+@media (max-width: 480px) {
+    .trips-screen {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .trips-surface {
+        padding: 20px 14px 22px;
+    }
+
+    .trips-header h1 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+
+    .trips-header p {
+        font-size: 0.8rem;
+        margin-bottom: 16px;
+    }
+
+    .trips-widgets {
+        gap: 8px;
+    }
+
+    .trips-widget {
+        padding: 12px 6px;
+        border-radius: 12px;
+    }
+
+    .trips-widget-label {
+        font-size: 0.65rem;
+    }
+
+    .trips-deep-zone {
+        padding: 20px 14px;
+    }
+
+    .trips-card {
+        padding: 14px 12px;
+    }
+
+    .trips-card-details {
+        gap: 6px;
+    }
+
+    .trips-detail-label {
+        font-size: 0.65rem;
+    }
+
+    .trips-detail strong {
+        font-size: 0.8rem;
+    }
+
+    .trips-gear-panel {
+        padding: 12px;
+    }
+}
+
+/* =========================================
+   SHORT PHONE SCREENS
+   ========================================= */
+
+@media (max-height: 700px) {
+    .trips-surface {
+        padding-top: 14px;
+        padding-bottom: 16px;
+    }
+
+    .trips-header p {
+        margin-bottom: 12px;
+    }
+
+    .trips-deep-zone {
+        padding-top: 16px;
+    }
+}

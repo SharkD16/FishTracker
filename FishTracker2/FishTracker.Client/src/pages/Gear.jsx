@@ -192,7 +192,6 @@ function Gear() {
         <main className="gear-screen">
             <section className="gear-surface">
                 <header className="gear-header">
-                    <span className="gear-eyebrow">YOUR EQUIPMENT</span>
                     <h1>Gear Presets</h1>
                     <p>Save your favorite fishing setups and switch between them.</p>
                 </header>

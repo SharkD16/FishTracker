@@ -1,58 +1,115 @@
+
+/* =========================================
+   MAIN PAGE — MATCH HOME / STATS / TRIPS
+   ========================================= */
+
 .gear-screen {
-    height: 100dvh;
-    overflow-y: auto;
+    width: 100%;
+    max-width: 480px;
+    height: 90vh;
+    height: 90dvh;
+    min-height: 0;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+    border-radius: 24px;
+
     background: #08283f;
-    color: #fff;
-    font-family: inherit;
+    color: #ffffff;
+
+    font-family: -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, sans-serif;
+
     box-sizing: border-box;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .gear-screen * {
     box-sizing: border-box;
 }
 
+/* =========================================
+   SKY / SURFACE SECTION
+   ========================================= */
+
 .gear-surface {
-    padding: 42px 22px 30px;
-    background: linear-gradient(180deg, #d9f6fc 0%, #a9e5f1 100%);
+    flex-shrink: 0;
+
+    padding: 20px 20px 22px;
+
+    background: linear-gradient(
+        180deg,
+        #d9f6fc 0%,
+        #a9e5f1 100%
+    );
+
     color: #12394e;
-    border-radius: 0 0 28px 28px;
+    border-radius: 0;
 }
+
+/* =========================================
+   HEADER
+   ========================================= */
 
 .gear-header {
     max-width: 480px;
-    margin: 0 auto 24px;
+    margin: 0 auto 16px;
     text-align: center;
 }
 
 .gear-eyebrow {
     display: block;
-    font-size: 11px;
+
+    margin-bottom: 5px;
+
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+
     color: #31829b;
-    margin-bottom: 10px;
 }
 
 .gear-header h1 {
-    font-size: clamp(28px, 6vw, 38px);
-    font-weight: 800;
-    margin: 0 0 8px;
+    margin: 0 0 6px;
+
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+
+    color: #000000;
 }
 
 .gear-header p {
-    font-size: 14px;
-    line-height: 1.5;
     margin: 0;
+
+    font-size: 0.85rem;
+    line-height: 1.4;
+
     color: #426b7e;
 }
 
+/* =========================================
+   CURRENTLY EQUIPPED
+   ========================================= */
+
 .gear-current {
+    width: 100%;
     max-width: 480px;
-    margin: 0 auto 18px;
-    padding: 20px;
+
+    margin: 0 auto 14px;
+    padding: 14px 16px;
+
     border: 1px solid rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
+    border-radius: 16px;
+
     background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+
     box-shadow: 0 8px 24px rgba(16, 86, 113, 0.09);
 }
 
@@ -60,88 +117,195 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+
+    gap: 10px;
+    margin-bottom: 8px;
+
     color: #43859a;
-    font-size: 12px;
+
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
 }
 
 .gear-status-dot {
     width: 9px;
     height: 9px;
+
+    flex-shrink: 0;
+
     border-radius: 50%;
     background: #17bd91;
 }
 
 .gear-current h2 {
-    margin: 0 0 12px;
-    font-size: 21px;
+    margin: 0 0 8px;
+
+    font-size: 17px;
+    font-weight: 700;
+    color: #12394e;
+
+    overflow-wrap: anywhere;
 }
 
 .gear-current p {
-    margin: 5px 0;
-    font-size: 14px;
+    margin: 4px 0;
+
+    font-size: 13px;
+    line-height: 1.5;
+
     color: #426579;
+    overflow-wrap: anywhere;
 }
+
+/* =========================================
+   CREATE GEAR BUTTON
+   ========================================= */
 
 .gear-create-button {
     display: block;
+
     width: 100%;
     max-width: 480px;
+
     margin: 0 auto;
-    padding: 15px;
+    padding: 12px 15px;
+
     border: none;
     border-radius: 14px;
+
     background: #086d95;
-    color: white;
-    font-size: 15px;
+    color: #ffffff;
+
+    font-size: 14px;
     font-weight: 800;
+
     cursor: pointer;
+
     box-shadow: 0 5px 12px rgba(0, 83, 124, 0.16);
+
+    transition: background 0.2s ease;
 }
 
 .gear-create-button:hover {
     background: #075b7e;
 }
 
-.gear-deep {
-    max-width: 524px;
-    margin: 0 auto;
-    padding: 30px 22px 60px;
+.gear-create-button:active {
+    transform: translateY(1px);
 }
 
+/* =========================================
+   DEEP WATER SECTION
+   ========================================= */
+
+.gear-deep {
+    flex: 1;
+    min-height: 0;
+
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: linear-gradient(
+        180deg,
+        #1b4965 0%,
+        #0b2545 100%
+    );
+
+    color: #ffffff;
+}
+
+/* =========================================
+   SAVED PRESETS HEADING
+   ========================================= */
+
 .gear-list-heading {
+    flex-shrink: 0;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 .gear-list-heading h2 {
-    font-size: 20px;
     margin: 0;
+
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    color: #64dfdf;
 }
 
 .gear-list-heading span {
-    font-size: 13px;
-    color: #9bbaca;
+    flex-shrink: 0;
+
+    font-size: 0.75rem;
+    color: #bce0ee;
 }
+
+/* =========================================
+   SCROLLABLE PRESET LIST
+   ========================================= */
 
 .gear-list {
+    flex: 1;
+    min-height: 0;
+
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    max-height: 48vh;
+    gap: 12px;
+
+    max-height: none;
+
     overflow-y: auto;
-    padding: 2px 4px 8px 0;
+    overflow-x: hidden;
+
+    padding: 2px 5px 10px 0;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 223, 223, 0.6) transparent;
+
     overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
 }
 
+.gear-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.gear-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.gear-list::-webkit-scrollbar-thumb {
+    background: rgba(100, 223, 223, 0.6);
+    border-radius: 10px;
+}
+
+/* =========================================
+   INDIVIDUAL GEAR CARD
+   ========================================= */
+
 .gear-card {
-    padding: 20px;
-    border-radius: 18px;
+    flex-shrink: 0;
+
+    padding: 16px;
+
+    border-radius: 16px;
     background: #123c55;
     border: 1px solid #27536c;
 }
@@ -155,33 +319,54 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .gear-card-top h3 {
-    font-size: 17px;
     margin: 0;
+
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+
     overflow-wrap: anywhere;
 }
 
+/* =========================================
+   EQUIPPED BADGE
+   ========================================= */
+
 .gear-equipped-badge {
     flex-shrink: 0;
+
     padding: 6px 10px;
+
     border-radius: 20px;
+
     background: #c7f6e7;
     color: #086c55;
+
     font-size: 11px;
     font-weight: 800;
 }
 
+/* =========================================
+   GEAR DETAILS
+   ========================================= */
+
 .gear-details p {
     display: flex;
     justify-content: space-between;
+
     gap: 12px;
-    margin: 10px 0;
+    margin: 8px 0;
+
     color: #e4f4fa;
     font-size: 13px;
+    line-height: 1.5;
+
     overflow-wrap: anywhere;
 }
 
@@ -190,25 +375,42 @@
     color: #9fc3d3;
 }
 
+/* =========================================
+   GEAR ACTION BUTTONS
+   ========================================= */
+
 .gear-actions {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
+
+    margin-top: 16px;
 }
 
 .gear-actions button {
-    padding: 11px 15px;
+    padding: 10px 14px;
+
     border-radius: 10px;
+
     font-weight: 700;
     font-size: 13px;
+
     cursor: pointer;
+
+    transition: background 0.2s ease,
+        opacity 0.2s ease;
 }
 
 .gear-equip-button {
     flex: 1;
+
     background: #f3c96b;
     border: none;
+
     color: #19374b;
+}
+
+.gear-equip-button:hover:not(:disabled) {
+    background: #f8d98c;
 }
 
 .gear-equip-button:disabled {
@@ -218,8 +420,13 @@
 
 .gear-delete-button {
     background: transparent;
+
     color: #ffb5b5;
     border: 1px solid #986576;
+}
+
+.gear-delete-button:hover:not(:disabled) {
+    background: rgba(255, 181, 181, 0.1);
 }
 
 .gear-delete-button:disabled {
@@ -227,9 +434,15 @@
     cursor: default;
 }
 
+/* =========================================
+   EMPTY STATE
+   ========================================= */
+
 .gear-empty {
     text-align: center;
+
     padding: 38px 15px;
+
     color: #b4ceda;
 }
 
@@ -238,15 +451,25 @@
 }
 
 .gear-empty h3 {
-    color: #fff;
+    color: #ffffff;
     margin-bottom: 6px;
 }
 
+/* =========================================
+   SUCCESS / ERROR MESSAGES
+   ========================================= */
+
 .gear-error,
 .gear-message {
+    flex-shrink: 0;
+
     padding: 12px;
+
     border-radius: 10px;
+
     font-size: 13px;
+    line-height: 1.5;
+
     margin-bottom: 16px;
 }
 
@@ -260,28 +483,46 @@
     color: #d7fff0;
 }
 
+/* =========================================
+   CREATE PRESET MODAL OVERLAY
+   ========================================= */
+
 .gear-modal-overlay {
     position: fixed;
     inset: 0;
+
     z-index: 1000;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     padding: 20px;
+
     background: rgba(3, 19, 34, 0.76);
     backdrop-filter: blur(5px);
 }
 
+/* =========================================
+   MODAL CONTAINER
+   ========================================= */
+
 .gear-modal {
     width: 100%;
     max-width: 420px;
+
     max-height: 90dvh;
     overflow-y: auto;
+
     padding: 28px 24px;
+
     border-radius: 22px;
+
     background: #e8f8fc;
     color: #12384d;
+
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
     touch-action: pan-y;
 }
 
@@ -293,9 +534,14 @@
 .gear-modal > p {
     font-size: 13px;
     color: #577a8a;
+
     line-height: 1.5;
     margin-bottom: 24px;
 }
+
+/* =========================================
+   MODAL FORM
+   ========================================= */
 
 .gear-modal form {
     display: flex;
@@ -304,40 +550,56 @@
 
 .gear-modal label {
     margin-bottom: 7px;
+
     font-size: 13px;
     font-weight: 800;
 }
 
 .gear-modal input {
     width: 100%;
+
     padding: 13px;
     margin-bottom: 18px;
+
     border: 1px solid #a8d0dc;
     border-radius: 10px;
-    background: white;
+
+    background: #ffffff;
     color: #173c51;
+
     font-size: 14px;
+
     outline: none;
 }
 
 .gear-modal input:focus {
     border-color: #1597c3;
+
     box-shadow: 0 0 0 3px rgba(21, 151, 195, 0.14);
 }
+
+/* =========================================
+   MODAL ACTIONS
+   ========================================= */
 
 .gear-modal-actions {
     display: flex;
     gap: 12px;
+
     margin-top: 8px;
 }
 
 .gear-modal-actions button {
     flex: 1;
+
     padding: 13px;
+
     border: none;
     border-radius: 11px;
+
     font-size: 14px;
     font-weight: 800;
+
     cursor: pointer;
 }
 
@@ -348,7 +610,7 @@
 
 .gear-save-button {
     background: #087ba2;
-    color: white;
+    color: #ffffff;
 }
 
 .gear-modal-actions button:disabled {
@@ -356,16 +618,206 @@
     cursor: default;
 }
 
+/* =========================================
+   SMALL SCREENS
+   ========================================= */
+
 @media (max-width: 480px) {
     .gear-surface {
-        padding: 32px 16px 24px;
+        padding: 18px 16px 20px;
     }
 
     .gear-deep {
-        padding: 25px 16px 50px;
+        padding: 18px 16px;
+    }
+
+    .gear-card {
+        padding: 14px 12px;
+    }
+
+    .gear-card-top h3 {
+        font-size: 14px;
     }
 
     .gear-modal {
         padding: 24px 20px;
+    }
+}
+
+/* =========================================
+   SHORT SCREENS
+   ========================================= */
+
+@media (max-height: 650px) {
+    .gear-surface {
+        padding-top: 12px;
+        padding-bottom: 14px;
+    }
+
+    .gear-header {
+        margin-bottom: 10px;
+    }
+
+    .gear-current {
+        padding: 10px 14px;
+        margin-bottom: 10px;
+    }
+
+    .gear-deep {
+        padding-top: 14px;
+    }
+}
+
+
+/* =========================================
+   RESPONSIVE GEAR LAYOUT
+   ========================================= */
+
+.gear-screen {
+    height: 90dvh;
+    min-height: 0;
+}
+
+.gear-card-top h3 {
+    min-width: 0;
+    flex: 1;
+}
+
+.gear-details p {
+    min-width: 0;
+}
+
+.gear-details strong {
+    flex-shrink: 0;
+}
+
+.gear-actions button {
+    min-width: 0;
+    min-height: 44px;
+}
+
+.gear-modal {
+    max-height: calc(100dvh - 40px);
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.gear-modal input {
+    font-size: 16px;
+}
+
+/* =========================================
+   MOBILE — FULL-SCREEN
+   ========================================= */
+
+@media (max-width: 480px) {
+    .gear-screen {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .gear-surface {
+        padding: 16px 14px 18px;
+    }
+
+    .gear-header {
+        margin-bottom: 12px;
+    }
+
+    .gear-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .gear-header p {
+        font-size: 0.8rem;
+    }
+
+    .gear-current {
+        padding: 12px 14px;
+        margin-bottom: 12px;
+    }
+
+    .gear-current h2 {
+        font-size: 16px;
+    }
+
+    .gear-create-button {
+        min-height: 44px;
+    }
+
+    .gear-deep {
+        padding: 18px 14px;
+    }
+
+    .gear-list-heading {
+        margin-bottom: 12px;
+    }
+
+    .gear-card {
+        padding: 14px 12px;
+    }
+
+    .gear-card-top {
+        align-items: flex-start;
+    }
+
+    .gear-actions {
+        gap: 8px;
+    }
+
+    .gear-actions button {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .gear-modal-overlay {
+        padding: 12px;
+    }
+
+    .gear-modal {
+        max-width: 100%;
+        max-height: calc(100dvh - 24px);
+        padding: 22px 16px;
+        border-radius: 18px;
+    }
+
+    .gear-modal h2 {
+        font-size: 21px;
+    }
+
+    .gear-modal-actions {
+        gap: 8px;
+    }
+
+    .gear-modal-actions button {
+        min-height: 44px;
+        padding: 10px;
+    }
+}
+
+/* =========================================
+   SHORT PHONE SCREENS
+   ========================================= */
+
+@media (max-height: 700px) {
+    .gear-surface {
+        padding-top: 12px;
+        padding-bottom: 14px;
+    }
+
+    .gear-header {
+        margin-bottom: 10px;
+    }
+
+    .gear-current {
+        padding: 10px 12px;
+        margin-bottom: 10px;
+    }
+
+    .gear-deep {
+        padding-top: 14px;
     }
 }

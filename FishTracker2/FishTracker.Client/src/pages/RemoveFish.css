@@ -870,3 +870,152 @@
         font-size: 18px;
     }
 }
+
+
+/* =========================================
+   RESPONSIVE REMOVE FISH
+   ========================================= */
+
+/* Desktop */
+
+.remove-fish-page {
+    height: 90dvh;
+    min-height: 0;
+}
+
+/* Allow vertical scrolling through fish */
+
+.fish-list {
+    min-height: 0;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+}
+
+/* Prevent long text from overflowing */
+
+.fish-row,
+.fish-column {
+    min-width: 0;
+}
+
+.column-value {
+    overflow-wrap: anywhere;
+}
+
+/* Keep confirmation popup inside screen */
+
+.delete-modal,
+.remove-success-popup {
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+}
+
+.delete-modal {
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 480px) {
+
+    .remove-fish-page {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        min-height: 0;
+
+        margin: 0;
+        padding: 20px 16px;
+
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .fish-list {
+        gap: 12px;
+        padding-right: 2px;
+    }
+
+    /* Keep the original five-column layout */
+
+    .fish-row {
+        grid-template-columns:
+            40px
+            minmax(0, 1.3fr)
+            minmax(0, 0.65fr)
+            minmax(0, 0.65fr)
+            64px;
+
+        gap: 5px;
+        padding: 11px 8px;
+    }
+
+    .fish-row-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .fish-row-icon img {
+        max-width: 38px;
+        max-height: 36px;
+    }
+
+    .column-label {
+        font-size: 8px;
+    }
+
+    .column-value {
+        font-size: 12px;
+    }
+
+    /* Confirmation popup */
+
+    .modal-overlay,
+    .remove-success-overlay {
+        padding: 16px;
+    }
+
+    .delete-modal {
+        width: 100%;
+        max-width: 320px;
+        padding: 20px;
+    }
+
+    .remove-success-popup {
+        max-width: 300px;
+        padding: 26px 20px;
+    }
+}
+
+/* =========================================
+   SMALL HEIGHT SCREENS
+   ========================================= */
+
+@media (max-height: 700px) {
+
+    .remove-fish-header {
+        margin-bottom: 12px;
+    }
+
+    .delete-modal {
+        padding: 16px;
+    }
+
+    .delete-modal h2 {
+        margin-bottom: 14px;
+    }
+
+    .modal-fish-summary,
+    .modal-stats,
+    .modal-warning {
+        margin-bottom: 12px;
+    }
+}
+
+.remove-button {
+    max-width: 100%;
+}
