@@ -23,6 +23,9 @@ namespace FishTracker.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("FishingTripId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<decimal>("Length")
                         .HasColumnType("TEXT");
 
@@ -36,6 +39,8 @@ namespace FishTracker.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("FishId");
+
+                    b.HasIndex("FishingTripId");
 
                     b.HasIndex("UserId");
 
@@ -147,11 +152,18 @@ namespace FishTracker.Infrastructure.Migrations
 
             modelBuilder.Entity("FishTracker.Domain.Fish", b =>
                 {
+                    b.HasOne("FishTracker.Domain.FishingTrip", "FishingTrip")
+                        .WithMany("Fish")
+                        .HasForeignKey("FishingTripId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("FishTracker.Domain.User", "User")
                         .WithMany("Fish")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FishingTrip");
 
                     b.Navigation("User");
                 });
@@ -176,6 +188,11 @@ namespace FishTracker.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FishTracker.Domain.FishingTrip", b =>
+                {
+                    b.Navigation("Fish");
                 });
 
             modelBuilder.Entity("FishTracker.Domain.User", b =>

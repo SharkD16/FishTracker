@@ -230,6 +230,15 @@ function Trips() {
                                             )}
                                         </strong>
                                     </div>
+
+                                    <div className="trips-detail">
+                                        <span className="trips-detail-label">
+                                            Total Fish Caught
+                                        </span>
+                                        <strong>
+                                            {trip.totalFishCaught ?? 0}
+                                        </strong>
+                                    </div>
                                 </div>
 
                                 {/* GEAR SNAPSHOT */}

@@ -18,4 +18,5 @@ public class FishingTrip
     public int UserId { get; set; }
 
     public User User { get; set; } = null!;
+    public ICollection<Fish> Fish { get; set; } = new List<Fish>();
 }

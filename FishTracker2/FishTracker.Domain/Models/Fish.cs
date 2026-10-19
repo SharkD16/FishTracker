@@ -13,4 +13,7 @@ public class Fish
     public int UserId{ get; set; }
 
     public User User{ get; set; } = null!;
+    public int? FishingTripId { get; set; }
+
+    public FishingTrip? FishingTrip { get; set; }
 }

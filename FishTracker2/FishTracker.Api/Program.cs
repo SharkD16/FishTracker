@@ -350,7 +350,28 @@ static async Task<IResult> CreateFishAsync(CreateFishRequest request, ClaimsPrin
     if (request.Length is <= 0 or > 1000) errors[nameof(request.Length)] = ["Length must be greater than zero and no more than 1000."];
     if (!Enum.IsDefined(request.Species)) errors[nameof(request.Species)] = ["A valid fish species is required."];
     if (errors.Count > 0) return Results.ValidationProblem(errors);
-    var fish = new Fish { UserId = id.Value, Weight = request.Weight, Length = request.Length, Species = request.Species }; db.Fish.Add(fish); await db.SaveChangesAsync(ct);
+    // Find the user's currently active fishing trip.
+    var activeTripId = await db.FishingTrips
+        .AsNoTracking()
+        .Where(trip =>
+            trip.UserId == id.Value &&
+            trip.EndTime == null)
+        .Select(trip => (int?)trip.FishingTripId)
+        .FirstOrDefaultAsync(ct);
+
+    // Associate the fish with the active trip, if one exists.
+    var fish = new Fish
+    {
+        UserId = id.Value,
+        Weight = request.Weight,
+        Length = request.Length,
+        Species = request.Species,
+        FishingTripId = activeTripId
+    };
+
+    db.Fish.Add(fish);
+    await db.SaveChangesAsync(ct);
+
     return Results.Created($"/api/fish/{fish.FishId}", new FishResponse(fish.FishId, fish.Weight, fish.Length, fish.Species));
 }
 
@@ -680,7 +701,8 @@ static async Task<IResult> GetFishingTripsAsync(
             trip.EndTime,
             trip.GearPresetName,
             trip.FishingRod,
-            trip.Lure
+            trip.Lure,
+            TotalFishCaught = trip.Fish.Count()
         })
         .ToListAsync(ct);
 
@@ -696,6 +718,7 @@ static async Task<IResult> GetFishingTripsAsync(
             trip.GearPresetName,
             trip.FishingRod,
             trip.Lure,
+            trip.TotalFishCaught,
             durationMinutes = trip.EndTime.HasValue
                 ? (double?)(trip.EndTime.Value - trip.StartTime).TotalMinutes
                 : null

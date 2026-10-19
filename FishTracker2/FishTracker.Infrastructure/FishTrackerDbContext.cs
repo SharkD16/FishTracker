@@ -36,6 +36,10 @@ public class FishTrackerDbContext(DbContextOptions<FishTrackerDbContext> options
                 .WithMany(user => user.Fish)
                 .HasForeignKey(fish => fish.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(fish => fish.FishingTrip)
+                .WithMany(trip => trip.Fish)
+                .HasForeignKey(fish => fish.FishingTripId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<Gear>(entity =>
